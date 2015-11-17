@@ -1,9 +1,9 @@
-import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class AgendaBuilderMenu {
 	private static final int DELETE_EVENT_MENU_DELETE_BY_ID = 1;
-	private static final int EDIT_EVENT_FIND_BY_ID = 1;
+	private static final int EDIT_EVENT_MENU_FIND_BY_ID = 1;
 	private static final int READ_EVENT_MENU_FIND_BY_ID = 2;
 	private static final int READ_EVENT_MENU_LIST_ALL = 1;
 	private static final int OPERATOR_MENU_DELETE_EVENT = 4;
@@ -19,33 +19,31 @@ public class AgendaBuilderMenu {
 	private static final int USE_MENU_USER = 1;
 	private static final int MAIN_MENU_EXIT = 2;
 	private static final int MAIN_MENU_USE = 1;
-	
-	public void mainMenu() {
+
+	private static Scanner input = new Scanner(System.in);
+
+	public static void mainMenu() {
 		System.out.println("1. Use\n2. Exit\n");
 		System.out.print("Enter option(1-2): ");
-		Integer option = getSelectedOption();
-		if (option != null) {
-			switch (option) {
-			case MAIN_MENU_USE:
-				useMenu();
-				break;
-			case MAIN_MENU_EXIT:
-				System.out.println("You exit the program");
-				break;
-			default:
-				System.err.println("Enter valid number");
-				mainMenu();
-				break;
-			}
-		} else {
+		Integer option = getSelectedOption(input);
+		switch (option) {
+		case MAIN_MENU_USE:
+			useMenu();
+			break;
+		case MAIN_MENU_EXIT:
+			System.out.println("You exit the program");
+			break;
+		default:
+			System.err.println("Enter valid number");
 			mainMenu();
+			break;
 		}
 	}
 
-	private void useMenu() {
+	private static void useMenu() {
 		System.out.println("1. User\n2. Operator\n0. Return\n");
 		System.out.println("Enter option(1-3): ");
-		Integer option = getSelectedOption();
+		Integer option = getSelectedOption(input);
 		if (option != null) {
 			switch (option) {
 			case USE_MENU_USER:
@@ -62,15 +60,13 @@ public class AgendaBuilderMenu {
 				useMenu();
 				break;
 			}
-		} else {
-			useMenu();
 		}
 	}
 
-	private void userMenu() {
+	private static void userMenu() {
 		System.out.println("1. List all\n2. Register for event\n3. Unregister from event\n4. My agenda\n0. Return\n");
 		System.out.print("Enter option(1-5): ");
-		Integer option = getSelectedOption();
+		Integer option = getSelectedOption(input);
 		if (option != null) {
 			switch (option) {
 			case USER_MENU_LIST_ALL:
@@ -94,22 +90,20 @@ public class AgendaBuilderMenu {
 				userMenu();
 				break;
 			}
-		} else {
-			userMenu();
 		}
 	}
 
-	private void operatorMenu() {
+	public static void operatorMenu() {
 		System.out.println("1. Read event\n2. Create new event\n3. Edit event\n4. Delete event\n0. Return\n");
 		System.out.print("Enter option(1-5): ");
-		Integer option = getSelectedOption();
+		Integer option = getSelectedOption(input);
 		if (option != null) {
 			switch (option) {
 			case OPERATOR_MENU_READ_EVENT:
 				readEventMenu();
 				break;
 			case OPERATOR_MENU_CREATE_NEW_EVENT:
-				// prompt to enter data for event
+				Operator.createNewEvent();
 				break;
 			case OPERATOR_MENU_EDIT_EVENT:
 				editEventMenu();
@@ -125,21 +119,17 @@ public class AgendaBuilderMenu {
 				operatorMenu();
 				break;
 			}
-		} else {
-			operatorMenu();
 		}
 	}
 
-	private void readEventMenu() {
+	private static void readEventMenu() {
 		System.out.println("1. List all\n2. Find by Id\n0. Return\n");
 		System.out.print("Enter option(1-3): ");
-		Integer option = getSelectedOption();
+		Integer option = getSelectedOption(input);
 		if (option != null) {
 			switch (option) {
 			case READ_EVENT_MENU_LIST_ALL:
-				Operator operator = new Operator();
-				operator.showAllEvents();
-				// list all events
+				Operator.showAllEvents();
 				break;
 			case READ_EVENT_MENU_FIND_BY_ID:
 				System.out.print("Enter Id: ");
@@ -151,18 +141,16 @@ public class AgendaBuilderMenu {
 				readEventMenu();
 				break;
 			}
-		} else {
-			readEventMenu();
 		}
 	}
 
-	private void editEventMenu() {
+	private static void editEventMenu() {
 		System.out.println("1. Find by Id\n0. Return\n");
 		System.out.println("Enter option(1-2): ");
-		Integer option = getSelectedOption();
+		Integer option = getSelectedOption(input);
 		if (option != null) {
 			switch (option) {
-			case EDIT_EVENT_FIND_BY_ID:
+			case EDIT_EVENT_MENU_FIND_BY_ID:
 				System.out.println("Enter Id: ");
 
 				break;
@@ -174,15 +162,13 @@ public class AgendaBuilderMenu {
 				editEventMenu();
 				break;
 			}
-		} else {
-			editEventMenu();
 		}
 	}
 
-	private void deleteEventMenu() {
+	private static void deleteEventMenu() {
 		System.out.println("1. Delete by Id\n0. Return\n");
 		System.out.println("Enter opton(1-2)");
-		Integer option = getSelectedOption();
+		Integer option = getSelectedOption(input);
 		if (option != null) {
 			switch (option) {
 			case DELETE_EVENT_MENU_DELETE_BY_ID:
@@ -196,18 +182,19 @@ public class AgendaBuilderMenu {
 				editEventMenu();
 				break;
 			}
-		} else {
-			deleteEventMenu();
 		}
 	}
 
-	private Integer getSelectedOption() {
-		try {
-			Scanner input = new Scanner(System.in);
-			return input.nextInt();
-		} catch (InputMismatchException ex) {
-			System.err.println("Enter valid number!");
-			return null;
+	private static int getSelectedOption(Scanner input) {
+		while (true) {
+			try {
+				String txtNum = input.nextLine();
+				return Integer.parseInt(txtNum);
+			} catch (NumberFormatException e) {
+				System.err.println("Enter valid number");
+			} catch (NoSuchElementException e) {
+				return RETURN;
+			}
 		}
 	}
 }
