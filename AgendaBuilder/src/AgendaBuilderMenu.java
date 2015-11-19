@@ -25,7 +25,6 @@ public class AgendaBuilderMenu {
 	private static final int USE_MENU_OPERATOR = 2;
 	private static final int USE_MENU_USER = 1;
 	private static final int MAIN_MENU_USE = 1;
-	private static Map<Integer, Event> listOfEvents = new HashMap<Integer, Event>();
 	private static Scanner input = new Scanner(System.in);
 
 	public static void mainMenu() {
@@ -108,7 +107,8 @@ public class AgendaBuilderMenu {
 			readEventMenu();
 			break;
 		case OPERATOR_MENU_CREATE_NEW_EVENT:
-			createNewEvent(input);
+			Operator.createNewEvent(input);
+			operatorMenu();
 			break;
 		case OPERATOR_MENU_EDIT_EVENT:
 			editEventMenu();
@@ -133,12 +133,12 @@ public class AgendaBuilderMenu {
 		if (option != null) {
 			switch (option) {
 			case READ_EVENT_MENU_LIST_ALL:
-				showAllEvents();
+				Operator.showAllEvents();
 				returnMethod(input);
 				break;
 			case READ_EVENT_MENU_FIND_BY_ID:
 				System.out.print("Enter Id: ");
-				readEvent(input);
+				Operator.readEvent(input);
 				returnMethod(input);
 				break;
 			case RETURN:
@@ -148,15 +148,6 @@ public class AgendaBuilderMenu {
 				readEventMenu();
 				break;
 			}
-		}
-	}
-
-	private static void returnMethod(Scanner input) {
-		System.out.println("Press \"0\" (zero) to return");
-		if (getValidInteger(input) == RETURN) {
-			readEventMenu();
-		} else {
-			returnMethod(input);
 		}
 	}
 
@@ -201,72 +192,6 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	private static void createNewEvent(Scanner input) {
-		Event newEvent = new Event();
-		System.out.print("Id: ");
-		int id = getValidInteger(input);
-		if (!listOfEvents.containsKey(id)) {
-			newEvent.setId(id);
-		} else {
-			System.err.printf("Event with Id: %s already exists, please enter another Id%n", id);
-			System.out.println();
-			createNewEvent(input);
-		}
-
-		System.out.print("Enter name: ");
-		String name = input.nextLine();
-		newEvent.setName(name);
-		System.out.print("Enter country: ");
-		newEvent.setCountry(input.nextLine());
-		System.out.print("Enter location: ");
-		newEvent.setLocation(input.nextLine());
-		System.out.print("Enter start date: ");
-		newEvent.setStartDate(validDate(input));
-		System.out.println("Enter end date: ");
-		newEvent.setEndDate(validDate(input));
-		System.out.print("Enter \"true\" if the event is free: ");
-		newEvent.setIsFreeEvent(getValidBoolean(input));
-		listOfEvents.put(id, newEvent);
-		System.out.printf("%nYou sucsesfully created event \"%s\" %n", name);
-		System.out.println();
-		operatorMenu();
-	}
-
-	private static Date validDate(Scanner input) {
-		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		dateFormat.setLenient(false);
-		String dateAsString = input.nextLine();
-		try {
-			Date date = dateFormat.parse(dateAsString);
-			return date;
-		} catch (ParseException e) {
-			System.err.println("Enter valid date format (dd.mm.yyyy)!");
-			return validDate(input);
-		}
-	}
-	
-	private static void showAllEvents() {
-		for (Entry<Integer, Event> event : listOfEvents.entrySet()) {
-			System.out.printf("Id: %s, Name: %s", event.getValue().getId(), event.getValue().getName());
-			System.out.println();
-		}
-	}
-	
-	private static void readEvent(Scanner input) {
-		System.out.println(listOfEvents.get(getValidInteger(input)));
-	}
-	
-	private static boolean getValidBoolean(Scanner input) {
-		while (true) {
-			try {
-				String txtNum = input.nextLine();
-				return Boolean.parseBoolean(txtNum);
-			} catch (NumberFormatException e) {
-				System.err.println("Enter valid number");
-			}
-		}
-	}
-
 	private static int getValidInteger(Scanner input) {
 		while (true) {
 			try {
@@ -275,6 +200,15 @@ public class AgendaBuilderMenu {
 			} catch (NumberFormatException e) {
 				System.err.println("Enter valid number");
 			}
+		}
+	}
+
+	private static void returnMethod(Scanner input) {
+		System.out.println("Press \"0\" (zero) to return");
+		if (getValidInteger(input) == RETURN) {
+			readEventMenu();
+		} else {
+			returnMethod(input);
 		}
 	}
 }
