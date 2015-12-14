@@ -17,7 +17,7 @@ public class Operator {
 	private static final int IS_FREE = 7;
 	private static final int RETURN = 0;
 
-	private static Map<Integer, Event> listOfEvents = new HashMap<Integer, Event>();
+	public static Map<Integer, Event> listOfEvents = new HashMap<Integer, Event>();
 
 	public static void createNewEvent(Scanner input) {
 		Event newEvent = new Event();
