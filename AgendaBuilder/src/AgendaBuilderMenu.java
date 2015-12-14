@@ -1,12 +1,4 @@
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.Map.Entry;
 
 public class AgendaBuilderMenu {
 	private static final int DELETE_EVENT_MENU_DELETE_BY_ID = 1;
@@ -47,7 +39,7 @@ public class AgendaBuilderMenu {
 
 	private static void useMenu() {
 		System.out.println("1. User\n2. Operator\n0. Return\n");
-		System.out.println("Enter option(1-3): ");
+		System.out.println("Enter option: ");
 		Integer option = getValidInteger(input);
 		if (option != null) {
 			switch (option) {
@@ -70,7 +62,7 @@ public class AgendaBuilderMenu {
 
 	private static void userMenu() {
 		System.out.println("1. List all\n2. Register for event\n3. Unregister from event\n4. My agenda\n0. Return\n");
-		System.out.print("Enter option(1-5): ");
+		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
 		if (option != null) {
 			switch (option) {
@@ -98,9 +90,9 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	private static void operatorMenu() {
+	public static void operatorMenu() {
 		System.out.println("1. Read event\n2. Create new event\n3. Edit event\n4. Delete event\n0. Return\n");
-		System.out.print("Enter option(1-5): ");
+		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
 		switch (option) {
 		case OPERATOR_MENU_READ_EVENT:
@@ -108,7 +100,6 @@ public class AgendaBuilderMenu {
 			break;
 		case OPERATOR_MENU_CREATE_NEW_EVENT:
 			Operator.createNewEvent(input);
-			operatorMenu();
 			break;
 		case OPERATOR_MENU_EDIT_EVENT:
 			editEventMenu();
@@ -126,20 +117,17 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	private static void readEventMenu() {
+	public static void readEventMenu() {
 		System.out.println("1. List all\n2. Find by Id\n0. Return\n");
-		System.out.print("Enter option(1-3): ");
+		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
 		if (option != null) {
 			switch (option) {
 			case READ_EVENT_MENU_LIST_ALL:
-				Operator.showAllEvents();
-				returnMethod(input);
+				Operator.showAllEvents(input);
 				break;
 			case READ_EVENT_MENU_FIND_BY_ID:
-				System.out.print("Enter Id: ");
 				Operator.readEvent(input);
-				returnMethod(input);
 				break;
 			case RETURN:
 				operatorMenu();
@@ -151,15 +139,14 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	private static void editEventMenu() {
+	public static void editEventMenu() {
 		System.out.println("1. Find by Id\n0. Return\n");
-		System.out.println("Enter option(1-2): ");
+		System.out.println("Enter option: ");
 		Integer option = getValidInteger(input);
 		if (option != null) {
 			switch (option) {
 			case EDIT_EVENT_MENU_FIND_BY_ID:
-				System.out.println("Enter Id: ");
-
+				Operator.editEvent(input);
 				break;
 			case RETURN:
 				operatorMenu();
@@ -172,21 +159,21 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	private static void deleteEventMenu() {
+	public static void deleteEventMenu() {
 		System.out.println("1. Delete by Id\n0. Return\n");
-		System.out.println("Enter opton(1-2)");
+		System.out.println("Enter opton: ");
 		Integer option = getValidInteger(input);
 		if (option != null) {
 			switch (option) {
 			case DELETE_EVENT_MENU_DELETE_BY_ID:
-				System.out.println("Enter Id: ");
+				Operator.deleteEvent(input);
 				break;
 			case RETURN:
 				operatorMenu();
 				break;
 			default:
 				System.err.println("Enter valid number");
-				editEventMenu();
+				deleteEventMenu();
 				break;
 			}
 		}
@@ -200,15 +187,6 @@ public class AgendaBuilderMenu {
 			} catch (NumberFormatException e) {
 				System.err.println("Enter valid number");
 			}
-		}
-	}
-
-	private static void returnMethod(Scanner input) {
-		System.out.println("Press \"0\" (zero) to return");
-		if (getValidInteger(input) == RETURN) {
-			readEventMenu();
-		} else {
-			returnMethod(input);
 		}
 	}
 }
