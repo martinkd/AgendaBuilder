@@ -75,13 +75,13 @@ public class User {
 			System.out.println("Enter Id of event you want to unregister: ");
 			int id = getValidInteger(input);
 			System.out.println();
-			if (Operator.listOfEvents.containsKey(id)) {
+			if (myAgenda.containsKey(id)) {
 				myAgenda.remove(id);
 				System.out.printf("You sucessfully unregistered from event with Id: \"%s\"%n", id);
 				System.out.println();
 				AgendaBuilderMenu.userMenu();
 			} else {
-				System.out.printf("Unregistration NOT complete. Event with Id: \"%s\" does not exists%n", id);
+				System.out.printf("Unregistration NOT complete. Event with Id: \"%s\" does not exists in your Agenda%n", id);
 				System.out.println();
 				AgendaBuilderMenu.userMenu();
 			}
