@@ -159,7 +159,6 @@ public class Operator {
 			break;
 		case ID:
 			setNewId(input, id);
-			chooseDataToEdit(input, id);
 			break;
 		case NAME:
 			System.out.println("Enter new name: ");
