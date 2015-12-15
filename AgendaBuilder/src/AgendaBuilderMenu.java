@@ -20,27 +20,33 @@ public class AgendaBuilderMenu {
 	private static Scanner input = new Scanner(System.in);
 
 	public static void mainMenu() {
+		System.out.println("\tMAIN");
 		System.out.println("1. Use\n0. Exit\n");
 		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
-		switch (option) {
-		case MAIN_MENU_USE:
-			useMenu();
-			break;
-		case RETURN:
-			System.out.println("You exit the program");
-			break;
-		default:
-			System.err.println("Enter valid number");
-			mainMenu();
-			break;
+		System.out.println();
+		if (option != null) {
+			switch (option) {
+			case MAIN_MENU_USE:
+				useMenu();
+				break;
+			case RETURN:
+				System.out.println("You exit the program");
+				break;
+			default:
+				System.err.println("Enter valid number");
+				mainMenu();
+				break;
+			}
 		}
 	}
 
 	private static void useMenu() {
+		System.out.println("\tUSE");
 		System.out.println("1. User\n2. Operator\n0. Return\n");
-		System.out.println("Enter option: ");
+		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
+		System.out.println();
 		if (option != null) {
 			switch (option) {
 			case USE_MENU_USER:
@@ -60,24 +66,25 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	private static void userMenu() {
+	public static void userMenu() {
+		System.out.println("\tUSER");
 		System.out.println("1. List all\n2. Register for event\n3. Unregister from event\n4. My agenda\n0. Return\n");
 		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
+		System.out.println();
 		if (option != null) {
 			switch (option) {
 			case USER_MENU_LIST_ALL:
-				// shows list of events
+				User.showAllEvents(input);
 				break;
 			case USER_MENU_REGISTER_FOR_EVENT:
-				System.out.print("Enter Id: ");
+				User.registerEvent(input);
 				break;
 			case USER_MENU_UNREGISTER_FROM_EVENT:
-				System.out.print("Enter Id: ");
+				User.unrRegisterEvent(input);
 				break;
 			case USER_MENU_MY_AGENDA:
-				// Shows registered events
-				// Id, Name
+				User.showMyAgenda(input);
 				break;
 			case RETURN:
 				useMenu();
@@ -91,36 +98,42 @@ public class AgendaBuilderMenu {
 	}
 
 	public static void operatorMenu() {
+		System.out.println("\tOPERATOR");
 		System.out.println("1. Read event\n2. Create new event\n3. Edit event\n4. Delete event\n0. Return\n");
 		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
-		switch (option) {
-		case OPERATOR_MENU_READ_EVENT:
-			readEventMenu();
-			break;
-		case OPERATOR_MENU_CREATE_NEW_EVENT:
-			Operator.createNewEvent(input);
-			break;
-		case OPERATOR_MENU_EDIT_EVENT:
-			editEventMenu();
-			break;
-		case OPERATOR_MENU_DELETE_EVENT:
-			deleteEventMenu();
-			break;
-		case RETURN:
-			useMenu();
-			break;
-		default:
-			System.err.println("Enter valid number");
-			operatorMenu();
-			break;
+		System.out.println();
+		if (option != null) {
+			switch (option) {
+			case OPERATOR_MENU_READ_EVENT:
+				readEventMenu();
+				break;
+			case OPERATOR_MENU_CREATE_NEW_EVENT:
+				Operator.createNewEvent(input);
+				break;
+			case OPERATOR_MENU_EDIT_EVENT:
+				editEventMenu();
+				break;
+			case OPERATOR_MENU_DELETE_EVENT:
+				deleteEventMenu();
+				break;
+			case RETURN:
+				useMenu();
+				break;
+			default:
+				System.err.println("Enter valid number");
+				operatorMenu();
+				break;
+			}
 		}
 	}
 
 	public static void readEventMenu() {
+		System.out.println("\tREAD");
 		System.out.println("1. List all\n2. Find by Id\n0. Return\n");
 		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
+		System.out.println();
 		if (option != null) {
 			switch (option) {
 			case READ_EVENT_MENU_LIST_ALL:
@@ -140,9 +153,11 @@ public class AgendaBuilderMenu {
 	}
 
 	public static void editEventMenu() {
+		System.out.println("\tEDIT");
 		System.out.println("1. Find by Id\n0. Return\n");
-		System.out.println("Enter option: ");
+		System.out.print("Enter option: ");
 		Integer option = getValidInteger(input);
+		System.out.println();
 		if (option != null) {
 			switch (option) {
 			case EDIT_EVENT_MENU_FIND_BY_ID:
@@ -160,9 +175,11 @@ public class AgendaBuilderMenu {
 	}
 
 	public static void deleteEventMenu() {
+		System.out.println("\tDELETE");
 		System.out.println("1. Delete by Id\n0. Return\n");
-		System.out.println("Enter opton: ");
+		System.out.print("Enter opton: ");
 		Integer option = getValidInteger(input);
+		System.out.println();
 		if (option != null) {
 			switch (option) {
 			case DELETE_EVENT_MENU_DELETE_BY_ID:

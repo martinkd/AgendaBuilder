@@ -87,7 +87,8 @@ public class Operator {
 
 	public static void showAllEvents(Scanner input) {
 		if (listOfEvents.isEmpty()) {
-			System.out.println("There is no events to show");
+			System.out.println("There are no events to show");
+			System.out.println();
 			AgendaBuilderMenu.readEventMenu();
 		} else {
 			for (Entry<Integer, Event> event : listOfEvents.entrySet()) {
@@ -105,11 +106,13 @@ public class Operator {
 
 	public static void readEvent(Scanner input) {
 		if (listOfEvents.isEmpty()) {
-			System.out.println("There is no events to show");
+			System.out.println("There are no events to show");
+			System.out.println();
 			AgendaBuilderMenu.readEventMenu();
 		} else {
 			System.out.print("Enter Id of the event you want to read: ");
 			int id = getValidInteger(input);
+			System.out.println();
 			if (listOfEvents.containsKey(id)) {
 				System.out.println(listOfEvents.get(id));
 				while (true) {
@@ -128,11 +131,13 @@ public class Operator {
 
 	public static void editEvent(Scanner input) {
 		if (listOfEvents.isEmpty()) {
-			System.out.println("There is no events to edit");
+			System.out.println("There are no events to edit");
+			System.out.println();
 			AgendaBuilderMenu.editEventMenu();
 		} else {
 			System.out.print("Enter Id of the event you want to edit: ");
 			int id = getValidInteger(input);
+			System.out.println();
 			if (listOfEvents.containsKey(id)) {
 				chooseDataToEdit(input, id);
 			} else {
@@ -212,6 +217,7 @@ public class Operator {
 	private static void setNewId(Scanner input, int id) {
 		System.out.print("Enter new Id: ");
 		int newId = getValidInteger(input);
+		System.out.println();
 		if (listOfEvents.containsKey(newId)) {
 			System.out.printf("Cannot change the Id to \"%s\". Event with that Id already exists%n", newId);
 			System.out.println();
@@ -229,12 +235,17 @@ public class Operator {
 	public static void deleteEvent(Scanner input) {
 		if (listOfEvents.isEmpty()) {
 			System.out.println("There are no events to remove");
+			System.out.println();
 			AgendaBuilderMenu.deleteEventMenu();
 		} else {
 			System.out.print("Enter Id of the event you want to remove: ");
 			int id = getValidInteger(input);
+			System.out.println();
 			if (listOfEvents.containsKey(id)) {
 				listOfEvents.remove(id);
+				if (User.myAgenda.containsKey(id)) {
+					User.myAgenda.remove(id);
+				}
 				System.out.printf("You sucessfully removed event with Id: %s%n", id);
 				System.out.println();
 				AgendaBuilderMenu.deleteEventMenu();

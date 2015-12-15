@@ -5,8 +5,8 @@ import java.util.Map.Entry;
 
 public class User {
 	private static final int RETURN = 0;
-	private static Map<Integer, Event> myAgenda = new HashMap<Integer, Event>();
-
+	public static Map<Integer, Event> myAgenda = new HashMap<Integer, Event>();
+	
 	private static int getValidInteger(Scanner input) {
 		while (true) {
 			try {
@@ -21,6 +21,7 @@ public class User {
 	public static void showAllEvents(Scanner input) {
 		if (Operator.listOfEvents.isEmpty()) {
 			System.out.println("There are no events to show");
+			System.out.println();
 			AgendaBuilderMenu.userMenu();
 		} else {
 			for (Entry<Integer, Event> event : Operator.listOfEvents.entrySet()) {
@@ -38,11 +39,13 @@ public class User {
 	
 	public static void registerEvent (Scanner input) {
 		if (Operator.listOfEvents.isEmpty()) {
-			System.out.println("List of events is empty");
+			System.out.println("There are no events to register");
+			System.out.println();
 			AgendaBuilderMenu.userMenu();
 		} else {
-			System.out.println("Enter Id of event you want to register: ");
+			System.out.print("Enter Id of event you want to register: ");
 			int id = getValidInteger(input);
+			System.out.println();
 			if (Operator.listOfEvents.containsKey(id)) {
 				if (!myAgenda.containsKey(id)) {
 					myAgenda.put(id, Operator.listOfEvents.get(id));
@@ -64,11 +67,13 @@ public class User {
 	
 	public static void unrRegisterEvent (Scanner input) {
 		if (Operator.listOfEvents.isEmpty()) {
-			System.out.println("List of events is empty");
+			System.out.println("There are no events to unregister");
+			System.out.println();
 			AgendaBuilderMenu.userMenu();
 		} else {
 			System.out.println("Enter Id of event you want to unregister: ");
 			int id = getValidInteger(input);
+			System.out.println();
 			if (Operator.listOfEvents.containsKey(id)) {
 				myAgenda.remove(id);
 				System.out.printf("You sucessfully unregistered from event with Id: \"%s\"%n", id);
@@ -84,7 +89,7 @@ public class User {
 	
 	public static void showMyAgenda (Scanner input){
 		if (myAgenda.isEmpty()) {
-			System.out.println("There are no registered events");
+			System.out.println("There are no events in your Agenda");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
 		} else {
