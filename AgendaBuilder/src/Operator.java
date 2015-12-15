@@ -99,6 +99,7 @@ public class Operator {
 				System.out.println("Press \"0\" (zero) to return");
 				if (getValidInteger(input) == RETURN) {
 					AgendaBuilderMenu.readEventMenu();
+					break;
 				}
 			}
 		}
@@ -119,6 +120,7 @@ public class Operator {
 					System.out.println("Press \"0\" (zero) to return");
 					if (getValidInteger(input) == RETURN) {
 						AgendaBuilderMenu.readEventMenu();
+						break;
 					}
 				}
 			} else {

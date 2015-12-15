@@ -144,6 +144,7 @@ public class AgendaBuilderMenu {
 				break;
 			case RETURN:
 				operatorMenu();
+				break;
 			default:
 				System.err.println("Enter valid number");
 				readEventMenu();

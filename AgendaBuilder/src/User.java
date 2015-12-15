@@ -32,6 +32,7 @@ public class User {
 				System.out.println("Press \"0\" (zero) to return");
 				if (getValidInteger(input) == RETURN) {
 					AgendaBuilderMenu.userMenu();
+					break;
 				}
 			}
 		}
@@ -101,6 +102,7 @@ public class User {
 				System.out.println("Press \"0\" (zero) to return");
 				if (getValidInteger(input) == RETURN) {
 					AgendaBuilderMenu.userMenu();
+					break;
 				}
 			}
 		}
