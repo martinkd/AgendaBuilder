@@ -225,6 +225,10 @@ public class Operator {
 			chooseDataToEdit(input, id);
 		} else {
 			Event currentEvent = listOfEvents.remove(id);
+			if (User.myAgenda.containsKey(id)){
+				Event agendaEvent = User.myAgenda.remove(id);
+				User.myAgenda.put(newId, agendaEvent);
+			}
 			currentEvent.setId(newId);
 			listOfEvents.put(newId, currentEvent);
 			System.out.printf("You sucessfully changed Id of the event from \"%s\" to \"%s\"%n", id, newId);
