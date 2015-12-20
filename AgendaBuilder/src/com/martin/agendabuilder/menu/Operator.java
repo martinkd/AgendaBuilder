@@ -1,8 +1,5 @@
 package com.martin.agendabuilder.menu;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -43,42 +40,17 @@ public class Operator {
 		System.out.print("Enter location: ");
 		newEvent.setLocation(input.nextLine());
 		System.out.print("Enter start date: ");
-		newEvent.setStartDate(validDate(input));
+		newEvent.setStartDate(InputUtils.validDate(input));
 		System.out.print("Enter end date: ");
-		newEvent.setEndDate(validDate(input));
+		newEvent.setEndDate(InputUtils.validDate(input));
 		System.out.print("Enter \"true\" if the event is free: ");
-		newEvent.setIsFreeEvent(getValidBoolean(input));
+		newEvent.setIsFreeEvent(InputUtils.getValidBoolean(input));
 
 		EventsManager.addEvent(newEvent);
 
 		System.out.printf("%nYou sucsesfully created event with id: \"%s\" %n", id);
 		System.out.println();
 		AgendaBuilderMenu.operatorMenu();
-	}
-
-	private static Date validDate(Scanner input) {
-		while (true) {
-			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-			dateFormat.setLenient(false);
-			String txtDate = input.nextLine();
-			try {
-				Date date = dateFormat.parse(txtDate);
-				return date;
-			} catch (ParseException e) {
-				System.err.println("Enter valid date format (dd.mm.yyyy)!");
-			}
-		}
-	}
-
-	private static boolean getValidBoolean(Scanner input) {
-		while (true) {
-			try {
-				String txtBoolean = input.nextLine();
-				return Boolean.parseBoolean(txtBoolean);
-			} catch (NumberFormatException e) {
-				System.err.println("Enter valid boolean");
-			}
-		}
 	}
 
 	public static void showAllEvents(Scanner input) {
@@ -187,21 +159,21 @@ public class Operator {
 			break;
 		case START_DATE:
 			System.out.println("Enter new start date: ");
-			Date newStartDate = validDate(input);
+			Date newStartDate = InputUtils.validDate(input);
 			currentEvent.setStartDate(newStartDate);
 			System.out.println("You sucessfully changed start date of the event to: " + newStartDate);
 			chooseDataToEdit(input, currentEvent);
 			break;
 		case END_DATE:
 			System.out.println("Enter new end date: ");
-			Date newEndDate = validDate(input);
+			Date newEndDate = InputUtils.validDate(input);
 			currentEvent.setEndDate(newEndDate);
 			System.out.println("You sucessfully changed start date of the event to: " + newEndDate);
 			chooseDataToEdit(input, currentEvent);
 			break;
 		case IS_FREE:
 			System.out.println("If you want to make the event free, enter \"true\": ");
-			Boolean isFree = getValidBoolean(input);
+			Boolean isFree = InputUtils.getValidBoolean(input);
 			currentEvent.setIsFreeEvent(isFree);
 			if (isFree) {
 				System.out.println("You set the event free");
