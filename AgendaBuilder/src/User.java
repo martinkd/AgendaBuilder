@@ -66,7 +66,7 @@ public class User {
 		}
 	}
 	
-	public static void unrRegisterEvent (Scanner input) {
+	public static void unRegisterEvent (Scanner input) {
 		if (Operator.listOfEvents.isEmpty()) {
 			System.out.println("There are no events to unregister");
 			System.out.println();

@@ -81,7 +81,7 @@ public class AgendaBuilderMenu {
 				User.registerEvent(input);
 				break;
 			case USER_MENU_UNREGISTER_FROM_EVENT:
-				User.unrRegisterEvent(input);
+				User.unRegisterEvent(input);
 				break;
 			case USER_MENU_MY_AGENDA:
 				User.showMyAgenda(input);
