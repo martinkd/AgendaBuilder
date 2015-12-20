@@ -1,3 +1,4 @@
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -5,6 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+
+import com.martin.agendabuilder.util.InputUtils;
+
 import java.util.Map.Entry;
 
 public class Operator {
@@ -22,7 +26,7 @@ public class Operator {
 	public static void createNewEvent(Scanner input) {
 		Event newEvent = new Event();
 		System.out.print("Id: ");
-		int id = getValidInteger(input);
+		int id = InputUtils.getValidInteger(input);
 		if (!listOfEvents.containsKey(id)) {
 			newEvent.setId(id);
 		} else {
@@ -47,17 +51,6 @@ public class Operator {
 		System.out.printf("%nYou sucsesfully created event with id: \"%s\" %n", id);
 		System.out.println();
 		AgendaBuilderMenu.operatorMenu();
-	}
-
-	private static int getValidInteger(Scanner input) {
-		while (true) {
-			try {
-				String txtNum = input.nextLine();
-				return Integer.parseInt(txtNum);
-			} catch (NumberFormatException e) {
-				System.err.println("Enter valid number");
-			}
-		}
 	}
 
 	private static Date validDate(Scanner input) {
@@ -97,7 +90,7 @@ public class Operator {
 			}
 			while (true) {
 				System.out.println("Press \"0\" (zero) to return");
-				if (getValidInteger(input) == RETURN) {
+				if (InputUtils.getValidInteger(input) == RETURN) {
 					AgendaBuilderMenu.readEventMenu();
 					break;
 				}
@@ -112,13 +105,13 @@ public class Operator {
 			AgendaBuilderMenu.readEventMenu();
 		} else {
 			System.out.print("Enter Id of the event you want to read: ");
-			int id = getValidInteger(input);
+			int id = InputUtils.getValidInteger(input);
 			System.out.println();
 			if (listOfEvents.containsKey(id)) {
 				System.out.println(listOfEvents.get(id));
 				while (true) {
 					System.out.println("Press \"0\" (zero) to return");
-					if (getValidInteger(input) == RETURN) {
+					if (InputUtils.getValidInteger(input) == RETURN) {
 						AgendaBuilderMenu.readEventMenu();
 						break;
 					}
@@ -138,7 +131,7 @@ public class Operator {
 			AgendaBuilderMenu.editEventMenu();
 		} else {
 			System.out.print("Enter Id of the event you want to edit: ");
-			int id = getValidInteger(input);
+			int id = InputUtils.getValidInteger(input);
 			System.out.println();
 			if (listOfEvents.containsKey(id)) {
 				chooseDataToEdit(input, id);
@@ -153,7 +146,7 @@ public class Operator {
 	private static void chooseDataToEdit(Scanner input, int id) {
 		System.out.println(listOfEvents.get(id));
 		System.out.print("Choose data to edit (1-7) or 0 to return: ");
-		switch (getValidInteger(input)) {
+		switch (InputUtils.getValidInteger(input)) {
 		case RETURN:
 			AgendaBuilderMenu.editEventMenu();
 			break;
@@ -217,7 +210,7 @@ public class Operator {
 
 	private static void setNewId(Scanner input, int id) {
 		System.out.print("Enter new Id: ");
-		int newId = getValidInteger(input);
+		int newId = InputUtils.getValidInteger(input);
 		System.out.println();
 		if (listOfEvents.containsKey(newId)) {
 			System.out.printf("Cannot change the Id to \"%s\". Event with that Id already exists%n", newId);
@@ -244,7 +237,7 @@ public class Operator {
 			AgendaBuilderMenu.deleteEventMenu();
 		} else {
 			System.out.print("Enter Id of the event you want to remove: ");
-			int id = getValidInteger(input);
+			int id = InputUtils.getValidInteger(input);
 			System.out.println();
 			if (listOfEvents.containsKey(id)) {
 				listOfEvents.remove(id);

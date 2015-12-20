@@ -1,22 +1,14 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+
+import com.martin.agendabuilder.util.InputUtils;
+
 import java.util.Map.Entry;
 
 public class User {
 	private static final int RETURN = 0;
 	public static Map<Integer, Event> myAgenda = new HashMap<Integer, Event>();
-	
-	private static int getValidInteger(Scanner input) {
-		while (true) {
-			try {
-				String txtNum = input.nextLine();
-				return Integer.parseInt(txtNum);
-			} catch (NumberFormatException e) {
-				System.err.println("Enter valid number");
-			}
-		}
-	}
 	
 	public static void showAllEvents(Scanner input) {
 		if (Operator.listOfEvents.isEmpty()) {
@@ -30,7 +22,7 @@ public class User {
 			}
 			while (true) {
 				System.out.println("Press \"0\" (zero) to return");
-				if (getValidInteger(input) == RETURN) {
+				if (InputUtils.getValidInteger(input) == RETURN) {
 					AgendaBuilderMenu.userMenu();
 					break;
 				}
@@ -45,7 +37,7 @@ public class User {
 			AgendaBuilderMenu.userMenu();
 		} else {
 			System.out.print("Enter Id of event you want to register: ");
-			int id = getValidInteger(input);
+			int id = InputUtils.getValidInteger(input);
 			System.out.println();
 			if (Operator.listOfEvents.containsKey(id)) {
 				if (!myAgenda.containsKey(id)) {
@@ -73,7 +65,7 @@ public class User {
 			AgendaBuilderMenu.userMenu();
 		} else {
 			System.out.println("Enter Id of event you want to unregister: ");
-			int id = getValidInteger(input);
+			int id = InputUtils.getValidInteger(input);
 			System.out.println();
 			if (myAgenda.containsKey(id)) {
 				myAgenda.remove(id);
@@ -100,7 +92,7 @@ public class User {
 			}
 			while (true) {
 				System.out.println("Press \"0\" (zero) to return");
-				if (getValidInteger(input) == RETURN) {
+				if (InputUtils.getValidInteger(input) == RETURN) {
 					AgendaBuilderMenu.userMenu();
 					break;
 				}
