@@ -1,3 +1,4 @@
+package com.martin.agendabuilder.menu;
 import java.util.Scanner;
 
 import com.martin.agendabuilder.util.InputUtils;

@@ -1,3 +1,4 @@
+package com.martin.agendabuilder.entity;
 import java.util.Date;
 
 public class Event {

@@ -1,23 +1,27 @@
-import java.util.HashMap;
-import java.util.Map;
+package com.martin.agendabuilder.menu;
+import java.util.List;
 import java.util.Scanner;
 
+import com.martin.agendabuilder.core.EventsManager;
+import com.martin.agendabuilder.core.UserEventsManager;
+import com.martin.agendabuilder.entity.Event;
 import com.martin.agendabuilder.util.InputUtils;
 
-import java.util.Map.Entry;
-
 public class User {
+
 	private static final int RETURN = 0;
-	public static Map<Integer, Event> myAgenda = new HashMap<Integer, Event>();
-	
+	//public static Map<Integer, Event> myAgenda = new HashMap<Integer, Event>();
+
 	public static void showAllEvents(Scanner input) {
-		if (Operator.listOfEvents.isEmpty()) {
+		
+		List<Event> allEvents = EventsManager.getAllEvents();
+		if (allEvents.isEmpty()) {
 			System.out.println("There are no events to show");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
 		} else {
-			for (Entry<Integer, Event> event : Operator.listOfEvents.entrySet()) {
-				System.out.printf("Id: %s, Name: %s%n", event.getValue().getId(), event.getValue().getName());
+			for (Event event : allEvents) {
+				System.out.printf("Id: %s, Name: %s%n", event.getId(), event.getName());
 				System.out.println();
 			}
 			while (true) {
@@ -29,9 +33,9 @@ public class User {
 			}
 		}
 	}
-	
-	public static void registerEvent (Scanner input) {
-		if (Operator.listOfEvents.isEmpty()) {
+
+	public static void registerEvent(Scanner input) {
+		if (EventsManager.getAllEvents().isEmpty()) {
 			System.out.println("There are no events to register");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
@@ -39,14 +43,14 @@ public class User {
 			System.out.print("Enter Id of event you want to register: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			if (Operator.listOfEvents.containsKey(id)) {
-				if (!myAgenda.containsKey(id)) {
-					myAgenda.put(id, Operator.listOfEvents.get(id));
+			if (EventsManager.getEvent(id) != null) {
+				if (UserEventsManager.register(id)) {
 					System.out.printf("You sucessfully registered for event with Id: \"%s\"%n", id);
 					System.out.println();
 					AgendaBuilderMenu.userMenu();
 				} else {
-					System.out.printf("Event with Id: \"%s\" you are trying to register is already in your Agenda%n", id);
+					System.out.printf("Event with Id: \"%s\" you are trying to register is already in your Agenda%n",
+							id);
 					System.out.println();
 					AgendaBuilderMenu.userMenu();
 				}
@@ -57,9 +61,9 @@ public class User {
 			}
 		}
 	}
-	
-	public static void unRegisterEvent (Scanner input) {
-		if (Operator.listOfEvents.isEmpty()) {
+
+	public static void unRegisterEvent(Scanner input) {
+		if (EventsManager.getAllEvents().isEmpty()) {
 			System.out.println("There are no events to unregister");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
@@ -67,27 +71,28 @@ public class User {
 			System.out.println("Enter Id of event you want to unregister: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			if (myAgenda.containsKey(id)) {
-				myAgenda.remove(id);
+			if (UserEventsManager.unregister(id)) {
 				System.out.printf("You sucessfully unregistered from event with Id: \"%s\"%n", id);
 				System.out.println();
 				AgendaBuilderMenu.userMenu();
 			} else {
-				System.out.printf("Unregistration NOT complete. Event with Id: \"%s\" does not exists in your Agenda%n", id);
+				System.out.printf("Unregistration NOT complete. Event with Id: \"%s\" does not exists in your Agenda%n",
+						id);
 				System.out.println();
 				AgendaBuilderMenu.userMenu();
 			}
 		}
 	}
-	
-	public static void showMyAgenda (Scanner input){
-		if (myAgenda.isEmpty()) {
+
+	public static void showMyAgenda(Scanner input) {
+		List<Event> agendaEvents = UserEventsManager.getAgendaEvents();
+		if (agendaEvents.isEmpty()) {
 			System.out.println("There are no events in your Agenda");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
 		} else {
-			for (Entry<Integer, Event> event : myAgenda.entrySet()) {
-				System.out.printf("Id: %s, Name: %s%n", event.getValue().getId(), event.getValue().getName());
+			for (Event event : agendaEvents) {
+				System.out.printf("Id: %s, Name: %s%n", event.getId(), event.getName());
 				System.out.println();
 			}
 			while (true) {
