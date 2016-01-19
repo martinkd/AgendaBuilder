@@ -27,8 +27,8 @@ public class EventsManager {
 		return canAdd;
 	}
 
-	public static boolean updateEvent(Integer id, Event event) {
-		boolean canUpdate = !events.containsKey(event.getId());
+	public static boolean updateEvent(Event event) {
+		boolean canUpdate = events.containsKey(event.getId());
 		if (canUpdate) {
 			events.put(event.getId(), event);
 		}
