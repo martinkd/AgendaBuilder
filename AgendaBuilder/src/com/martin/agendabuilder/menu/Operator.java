@@ -12,12 +12,12 @@ import com.martin.agendabuilder.util.InputUtils;
 
 public class Operator {
 
-	private static final int NAME = 2;
-	private static final int COUNTRY = 3;
-	private static final int LOCATION = 4;
-	private static final int START_DATE = 5;
-	private static final int END_DATE = 6;
-	private static final int IS_FREE = 7;
+	private static final int NAME = 1;
+	private static final int COUNTRY = 2;
+	private static final int LOCATION = 3;
+	private static final int START_DATE = 4;
+	private static final int END_DATE = 5;
+	private static final int IS_FREE = 6;
 	private static final int RETURN = 0;
 
 	public static void createNewEvent(Scanner input) {
@@ -129,9 +129,9 @@ public class Operator {
 	}
 
 	private static void chooseDataToEdit(Scanner input, Event currentEvent) {
-		EventsManager.updateEvent(currentEvent.getId(), currentEvent);
+		EventsManager.updateEvent(currentEvent);
 		System.out.println(currentEvent);
-		System.out.print("Choose data to edit (1-7) or 0 to return: ");
+		System.out.print("Choose data to edit (1-6) or 0 to return: ");
 		switch (InputUtils.getValidInteger(input)) {
 		case RETURN:
 			AgendaBuilderMenu.editEventMenu();
