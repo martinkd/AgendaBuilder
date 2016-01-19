@@ -1,4 +1,6 @@
 package com.martin.agendabuilder.entity;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Event {
@@ -9,6 +11,7 @@ public class Event {
 	private Date startDate;
 	private Date endDate;
 	private Boolean isFreeEvent;
+	private DateFormat sdf = new SimpleDateFormat("d.M.YYYY");
 	
 	public int getId() {
 		return id;
@@ -65,7 +68,8 @@ public class Event {
 	public void setIsFreeEvent(Boolean isFreeEvent) {
 		this.isFreeEvent = isFreeEvent;
 	}
-
+	
+	
 	public String toString(){
 		return String.format("\tId: %s%n"
 				+ "1. Name: %s%n"
@@ -75,6 +79,6 @@ public class Event {
 				+ "5. End date: %s%n"
 				+ "6. Is free event: %s%n", 
 				getId() , getName(), getCountry(), getLocation(), 
-				getStartDate(), getEndDate(), getIsFreeEvent());
+				sdf.format(getStartDate()), sdf.format(getEndDate()), getIsFreeEvent());
 	}
 }
