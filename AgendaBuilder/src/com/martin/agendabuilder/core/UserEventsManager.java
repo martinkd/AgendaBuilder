@@ -12,7 +12,7 @@ public class UserEventsManager {
 	private static Set<Integer> agenda = new TreeSet<Integer>();
 
 	public static boolean register(Integer id) {
-		return agenda.add(id);
+		return EventsManager.getEvent(id) != null && agenda.add(id);
 	}
 
 	public static boolean unregister(Integer id) {
