@@ -67,13 +67,13 @@ public class Event {
 	}
 
 	public String toString(){
-		return String.format("1. Id: %s%n"
-				+ "2. Name: %s%n"
-				+ "3. Country: %s%n"
-				+ "4. Location: %s%n"
-				+ "5. Start date: %s%n"
-				+ "6. End date: %s%n"
-				+ "7. Is free event: %s%n", 
+		return String.format("\tId: %s%n"
+				+ "1. Name: %s%n"
+				+ "2. Country: %s%n"
+				+ "3. Location: %s%n"
+				+ "4. Start date: %s%n"
+				+ "5. End date: %s%n"
+				+ "6. Is free event: %s%n", 
 				getId() , getName(), getCountry(), getLocation(), 
 				getStartDate(), getEndDate(), getIsFreeEvent());
 	}
