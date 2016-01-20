@@ -36,12 +36,13 @@ public class UserEventsManagerTest {
 		UserEventsManager.register(1);
 		assertTrue(UserEventsManager.unregister(1));
 		assertFalse("cannot unregister twice for the same event", UserEventsManager.unregister(1));
-
+		EventsManager.removeEvent(1);
+		assertFalse("cannot unregister from event which is removed", UserEventsManager.unregister(1));
 	}
 
 	@Test
 	public void testGetAgendaEvents() {
-		assertEquals(0, UserEventsManager.getAgendaEvents().size());
+		assertTrue(UserEventsManager.getAgendaEvents().isEmpty());
 		Event event = new Event();
 		event.setId(1);
 		Event event2 = new Event();
@@ -56,5 +57,7 @@ public class UserEventsManagerTest {
 		assertEquals(2, UserEventsManager.getAgendaEvents().size());
 		UserEventsManager.unregister(1);
 		assertEquals(1, UserEventsManager.getAgendaEvents().size());
+		EventsManager.removeEvent(2);
+		assertTrue("Event which is removed should be removed from agenda too", UserEventsManager.getAgendaEvents().isEmpty());
 	}
 }

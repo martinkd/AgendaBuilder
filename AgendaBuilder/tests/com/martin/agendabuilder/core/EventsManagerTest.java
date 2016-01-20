@@ -50,7 +50,7 @@ public class EventsManagerTest {
 
 	@Test
 	public void testGetAllEvents() {
-		assertEquals(0, EventsManager.getAllEvents().size());
+		assertTrue(EventsManager.getAllEvents().isEmpty());
 		Event event1 = new Event();
 		event1.setId(1);
 		Event event2 = new Event();
