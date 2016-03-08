@@ -1,5 +1,5 @@
 package com.martin.agendabuilder.util;
-import java.text.DateFormat;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,15 +24,17 @@ public class InputUtils {
 
 	public static Date validDate(Scanner input) {
 		while (true) {
-			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-			dateFormat.setLenient(false);
-			String txtDate = input.nextLine();
-			try {
-				Date date = dateFormat.parse(txtDate);
-				return date;
-			} catch (ParseException e) {
-				System.err.println("Enter valid date format (dd.mm.yyyy)!");
-			}
+			String inputDate = input.nextLine();
+			if (inputDate != null && !inputDate.isEmpty()) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+				try {
+					sdf.setLenient(false);
+					return sdf.parse(inputDate);
+				} catch (ParseException e) {
+					System.err.println("Enter valid date");
+				}
+			} else break;
 		}
+		return null;
 	}
 }
