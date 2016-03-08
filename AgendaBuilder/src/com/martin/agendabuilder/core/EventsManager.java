@@ -34,6 +34,13 @@ public class EventsManager {
 		boolean canAdd = !events.containsKey(event.getId());
 		if (canAdd) {
 			events.put(event.getId(), event);
+			EventsDao dao = null;
+			try {
+				dao = new EventsDao();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			dao.insertIntoDb(event);
 		}
 		return canAdd;
 	}
