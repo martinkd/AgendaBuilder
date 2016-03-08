@@ -1,18 +1,32 @@
 package com.martin.agendabuilder.entity;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 public class Event {
+	public Event() {
+		super();
+	}
+
+	public Event(int id, String name, String country, String location, Date startDate, Date endDate,
+			Boolean isFreeEvent) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.country = country;
+		this.location = location;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.isFreeEvent = isFreeEvent;
+	}
+
 	private int id;
 	private String name;
 	private String country;
 	private String location;
-	private Date startDate;
-	private Date endDate;
+	private Date startDate = null;
+	private Date endDate = null;
 	private Boolean isFreeEvent;
-	private DateFormat sdf = new SimpleDateFormat("d.M.YYYY");
-	
+
 	public int getId() {
 		return id;
 	}
@@ -68,17 +82,11 @@ public class Event {
 	public void setIsFreeEvent(Boolean isFreeEvent) {
 		this.isFreeEvent = isFreeEvent;
 	}
-	
-	
-	public String toString(){
-		return String.format("\tId: %s%n"
-				+ "1. Name: %s%n"
-				+ "2. Country: %s%n"
-				+ "3. Location: %s%n"
-				+ "4. Start date: %s%n"
-				+ "5. End date: %s%n"
-				+ "6. Is free event: %s%n", 
-				getId() , getName(), getCountry(), getLocation(), 
-				sdf.format(getStartDate()), sdf.format(getEndDate()), getIsFreeEvent());
+
+	public String toString() {
+		return String.format(
+				"\tId: %s%n" + "1. Name: %s%n" + "2. Country: %s%n" + "3. Location: %s%n" + "4. Start date: %s%n"
+						+ "5. End date: %s%n" + "6. Is free event: %s%n",
+				getId(), getName(), getCountry(), getLocation(), getStartDate(), getEndDate(), getIsFreeEvent());
 	}
 }
