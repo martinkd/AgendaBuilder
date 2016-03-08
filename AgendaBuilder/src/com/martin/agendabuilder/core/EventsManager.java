@@ -46,11 +46,17 @@ public class EventsManager {
 	}
 
 	public static boolean updateEvent(Event event) {
-		boolean canUpdate = events.containsKey(event.getId());
-		if (canUpdate) {
-			events.put(event.getId(), event);
+		try {
+			EventsDao dao = new EventsDao();
+			boolean canUpdate = dao.searchById(event.getId()) != null;
+			if (canUpdate) {
+				dao.updateEvent(event);
+				return canUpdate;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return canUpdate;
+		return false;
 	}
 
 	public static boolean removeEvent(Integer id) {

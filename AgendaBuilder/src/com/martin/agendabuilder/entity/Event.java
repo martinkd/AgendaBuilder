@@ -23,8 +23,8 @@ public class Event {
 	private String name;
 	private String country;
 	private String location;
-	private Date startDate = null;
-	private Date endDate = null;
+	private Date startDate;
+	private Date endDate;
 	private Boolean isFreeEvent;
 
 	public int getId() {

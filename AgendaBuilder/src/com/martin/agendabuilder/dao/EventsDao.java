@@ -18,7 +18,7 @@ public class EventsDao {
 
 	public EventsDao() throws Exception	{
 
-	String dbUrl = "jdbc:mysql://localhost:3306/eventsDB";
+	String dbUrl = "jdbc:mysql://localhost:3306/eventsDB?useSSL=false";
 	String user = "student";
 	String pass = "student";
 	myConn = DriverManager.getConnection(dbUrl, user, pass);
@@ -78,6 +78,25 @@ public class EventsDao {
 			myStmt.setDate(5, event.getStartDate() == null? null : new java.sql.Date(event.getStartDate().getTime()));
 			myStmt.setDate(6, event.getEndDate() == null? null : new java.sql.Date(event.getEndDate().getTime()));
 			myStmt.setBoolean(7, event.getIsFreeEvent());
+			myStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	public void updateEvent (Event event) {
+		PreparedStatement myStmt = null;
+		try {
+			myStmt = myConn.prepareStatement("UPDATE events"
+					+ " SET name = ?, country = ?, location = ?,"
+					+ " startDate = ?, endDate = ?, isFree =? where id = ?" );
+			myStmt.setString(1, event.getName());
+			myStmt.setString(2, event.getCountry());
+			myStmt.setString(3, event.getLocation());
+			myStmt.setDate(4, event.getStartDate() == null? null : new java.sql.Date(event.getStartDate().getTime()));
+			myStmt.setDate(5, event.getEndDate() == null? null : new java.sql.Date(event.getEndDate().getTime()));
+			myStmt.setBoolean(6, event.getIsFreeEvent());
+			myStmt.setInt(7, event.getId());
 			myStmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
