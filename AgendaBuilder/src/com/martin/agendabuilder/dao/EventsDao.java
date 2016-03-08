@@ -75,25 +75,15 @@ public class EventsDao {
 			myStmt.setString(2, event.getName());
 			myStmt.setString(3, event.getCountry());
 			myStmt.setString(4, event.getLocation());
-			if (event.getStartDate() == null) {
-				myStmt.setDate(5, null);
-			} else {
-				myStmt.setDate(5, new java.sql.Date(event.getStartDate().getTime()) );				
-			}
-			if (event.getEndDate() == null) {
-				myStmt.setDate(6, null);
-			} else {
-				myStmt.setDate(6, new java.sql.Date(event.getEndDate().getTime()) );				
-			}
+			myStmt.setDate(5, event.getStartDate() == null? null : new java.sql.Date(event.getStartDate().getTime()));
+			myStmt.setDate(6, event.getEndDate() == null? null : new java.sql.Date(event.getEndDate().getTime()));
 			myStmt.setBoolean(7, event.getIsFreeEvent());
-			
 			myStmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-
 	private Event convertRowToEvent(ResultSet myRs) throws SQLException {
 		int id = myRs.getInt("id");
 		String name = myRs.getString("name");
