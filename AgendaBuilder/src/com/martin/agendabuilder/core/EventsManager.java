@@ -60,6 +60,16 @@ public class EventsManager {
 	}
 
 	public static boolean removeEvent(Integer id) {
-		return events.remove(id) != null;
+		try {
+			EventsDao dao = new EventsDao();
+			boolean canDelete = dao.searchById(id) != null;
+			if (canDelete) {
+				dao.deleteEvent(id);
+				return canDelete;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

@@ -51,7 +51,7 @@ public class EventsDao {
 		ResultSet myRs = null;
 		Event tempEvent = null;
 		try {
-			myStmt = myConn.prepareStatement("select * from events where id = ?");
+			myStmt = myConn.prepareStatement("SELECT * FROM events WHERE id = ?");
 			myStmt.setInt(1, id);
 
 			myRs = myStmt.executeQuery();
@@ -69,7 +69,7 @@ public class EventsDao {
 	public void insertIntoDb(Event event) {
 		PreparedStatement myStmt = null;
 		try {
-			myStmt = myConn.prepareStatement("insert into events(id, name, country, location, startdate, enddate, isfree)"
+			myStmt = myConn.prepareStatement("INSERT INTO events(id, name, country, location, startdate, enddate, isfree)"
 					+ "values (?, ?, ?, ?, ?, ?, ?)");
 			myStmt.setInt(1, event.getId());
 			myStmt.setString(2, event.getName());
@@ -97,6 +97,17 @@ public class EventsDao {
 			myStmt.setDate(5, event.getEndDate() == null? null : new java.sql.Date(event.getEndDate().getTime()));
 			myStmt.setBoolean(6, event.getIsFreeEvent());
 			myStmt.setInt(7, event.getId());
+			myStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteEvent (int id) {
+		PreparedStatement myStmt = null;
+		try {
+			myStmt = myConn.prepareStatement("DELETE  FROM events WHERE id = ?");
+			myStmt.setInt(1, id);
 			myStmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
