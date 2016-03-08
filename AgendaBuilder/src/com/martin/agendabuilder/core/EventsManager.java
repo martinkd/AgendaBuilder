@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.martin.agendabuilder.dao.EventsDao;
 import com.martin.agendabuilder.entity.Event;
 
 public class EventsManager {
@@ -12,13 +13,23 @@ public class EventsManager {
 	private static Map<Integer, Event> events = new HashMap<Integer, Event>();
 
 	public static List<Event> getAllEvents() {
-		return new ArrayList<Event>(events.values());
+		try {
+			EventsDao dao = new EventsDao();
+			return new ArrayList<Event>(dao.getAllEvents());
+		} catch (Exception e) {
+			return new ArrayList<Event>();
+		}
 	}
 
 	public static Event getEvent(Integer id) {
-		return events.get(id);
+		try {
+			EventsDao dao = new EventsDao();
+			return dao.searchById(id);
+		} catch (Exception e) {
+			return new Event();
+		}
 	}
-	
+
 	public static boolean addEvent(Event event) {
 		boolean canAdd = !events.containsKey(event.getId());
 		if (canAdd) {
@@ -34,7 +45,7 @@ public class EventsManager {
 		}
 		return canUpdate;
 	}
-	
+
 	public static boolean removeEvent(Integer id) {
 		return events.remove(id) != null;
 	}
