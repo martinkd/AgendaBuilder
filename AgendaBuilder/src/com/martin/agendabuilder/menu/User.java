@@ -1,4 +1,5 @@
 package com.martin.agendabuilder.menu;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,10 +11,11 @@ import com.martin.agendabuilder.util.InputUtils;
 public class User {
 
 	private static final int RETURN = 0;
-	//public static Map<Integer, Event> myAgenda = new HashMap<Integer, Event>();
+	// public static Map<Integer, Event> myAgenda = new HashMap<Integer,
+	// Event>();
 
 	public static void showAllEvents(Scanner input) {
-		
+
 		List<Event> allEvents = EventsManager.getAllEvents();
 		if (allEvents.isEmpty()) {
 			System.out.println("There are no events to show");
