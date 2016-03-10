@@ -11,23 +11,19 @@ public class UserEventsManager {
 	public static boolean register(Integer id) {
 		try {
 			EventsDao dao = new EventsDao();
-			if (dao.searchById(id) != null && dao.register(id))
-				return true;
+			return dao.searchById(id) != null && dao.register(id);
 		} catch (Exception e) {
 			return false;
 		}
-		return false;
 	}
 
 	public static boolean unregister(Integer id) {
 		try {
 			EventsDao dao = new EventsDao();
-			if (dao.searchById(id) != null && dao.unRegister(id))
-				return true;
+			return dao.searchById(id) != null && dao.unRegister(id);
 		} catch (Exception e) {
 			return false;
 		}
-		return false;
 	}
 
 	public static List<Event> getAgendaEvents() {

@@ -22,7 +22,17 @@ public class EventsDao {
 		String user = "student";
 		String pass = "student";
 		myConn = DriverManager.getConnection(dbUrl, user, pass);
-
+		Statement myStmt = myConn.createStatement();
+		myStmt.execute("CREATE TABLE IF NOT EXISTS events ("
+				+ "id int PRIMARY KEY,"
+				+ "name varchar(45),"
+				+ "country varchar(45),"
+				+ "location varchar(45),"
+				+ "startdate date,"
+				+ "enddate date,"
+				+ "isfree bit default 0,"
+				+ "UNIQUE INDEX id_unique (id));"
+				);
 	}
 
 	public List<Event> getAllEvents() throws SQLException {
@@ -66,7 +76,7 @@ public class EventsDao {
 		}
 	}
 
-	public void insertIntoDb(Event event) {
+	public boolean insertIntoDb(Event event) {
 		PreparedStatement myStmt = null;
 		try {
 			myStmt = myConn
@@ -80,12 +90,13 @@ public class EventsDao {
 			myStmt.setDate(6, event.getEndDate() == null ? null : new java.sql.Date(event.getEndDate().getTime()));
 			myStmt.setBoolean(7, event.getIsFreeEvent());
 			myStmt.executeUpdate();
+			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return false;
 		}
 	}
 
-	public void updateEvent(Event event) {
+	public boolean updateEvent(Event event) {
 		PreparedStatement myStmt = null;
 		try {
 			myStmt = myConn.prepareStatement("UPDATE events" + " SET name = ?, country = ?, location = ?,"
@@ -98,26 +109,28 @@ public class EventsDao {
 			myStmt.setBoolean(6, event.getIsFreeEvent());
 			myStmt.setInt(7, event.getId());
 			myStmt.executeUpdate();
+			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return false;
 		}
 	}
 
-	public void deleteEvent(int id) {
+	public boolean deleteEvent(int id) {
 		PreparedStatement myStmt = null;
 		try {
 			myStmt = myConn.prepareStatement("DELETE  FROM events WHERE id = ?");
 			myStmt.setInt(1, id);
 			myStmt.executeUpdate();
+			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return false;
 		}
 	}
 
 	public boolean register(int id) {
 		PreparedStatement myStmt = null;
 		try {
-			myStmt = myConn.prepareStatement("INSERT INTO agendaevents (id) VALUES (?)");
+			myStmt = myConn.prepareStatement("INSERT INTO agendaevents (events_id) SELECT id from events WHERE id = ?");
 			myStmt.setInt(1, id);
 			myStmt.executeUpdate();
 			return true;
@@ -129,7 +142,7 @@ public class EventsDao {
 	public boolean unRegister(int id) {
 		PreparedStatement myStmt = null;
 		try {
-			myStmt = myConn.prepareStatement("DELETE FROM agendaevents where id = ?");
+			myStmt = myConn.prepareStatement("DELETE FROM agendaevents where events_id = ?");
 			myStmt.setInt(1, id);
 			myStmt.executeUpdate();
 			return true;
@@ -146,10 +159,10 @@ public class EventsDao {
 
 		try {
 			myStmt = myConn.createStatement();
-			myRs = myStmt.executeQuery("SELECT id FROM agendaevents");
+			myRs = myStmt.executeQuery("SELECT events_id FROM agendaevents");
 
 			while (myRs.next()) {
-				int tempId = myRs.getInt("id");
+				int tempId = myRs.getInt("events_id");
 				list.add(tempId);
 			}
 
@@ -191,8 +204,4 @@ public class EventsDao {
 		close(null, myStmt, myRs);
 	}
 
-	public static void main(String[] args) throws Exception {
-		EventsDao dao = new EventsDao();
-		System.out.println(dao.getAllAgendaEvents());
-	}
 }
