@@ -33,6 +33,11 @@ public class EventsDao {
 				+ "isfree bit default 0,"
 				+ "UNIQUE INDEX id_unique (id));"
 				);
+		myStmt.execute("CREATE TABLE IF NOT EXISTS agendaevents("
+				+ "events_id INT NULL, "
+				+ "UNIQUE INDEX unique_id (events_id), "
+				+ "FOREIGN KEY (events_id) REFERENCES events (id) ON DELETE CASCADE ON UPDATE CASCADE);"
+				);
 	}
 
 	public List<Event> getAllEvents() throws SQLException {
