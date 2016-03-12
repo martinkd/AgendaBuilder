@@ -23,7 +23,7 @@ public class EventsDao {
 		String pass = "student";
 		myConn = DriverManager.getConnection(dbUrl, user, pass);
 		Statement myStmt = myConn.createStatement();
-		myStmt.execute("CREATE TABLE IF NOT EXISTS events ("
+		String createTableEvents = "CREATE TABLE IF NOT EXISTS events ("
 				+ "id int PRIMARY KEY,"
 				+ "name varchar(45),"
 				+ "country varchar(45),"
@@ -31,13 +31,15 @@ public class EventsDao {
 				+ "startdate date,"
 				+ "enddate date,"
 				+ "isfree bit default 0,"
-				+ "UNIQUE INDEX id_unique (id));"
-				);
-		myStmt.execute("CREATE TABLE IF NOT EXISTS agendaevents("
+				+ "UNIQUE INDEX id_unique (id));";
+		myStmt.execute(createTableEvents);
+		
+		String createTableAgendaEvents = "CREATE TABLE IF NOT EXISTS agendaevents("
 				+ "events_id INT NULL, "
 				+ "UNIQUE INDEX unique_id (events_id), "
-				+ "FOREIGN KEY (events_id) REFERENCES events (id) ON DELETE CASCADE ON UPDATE CASCADE);"
-				);
+				+ "FOREIGN KEY (events_id) REFERENCES events (id) "
+				+ "ON DELETE CASCADE ON UPDATE CASCADE);";
+		myStmt.execute(createTableAgendaEvents);
 	}
 
 	public List<Event> getAllEvents() throws SQLException {
@@ -51,10 +53,9 @@ public class EventsDao {
 			myRs = myStmt.executeQuery("SELECT * FROM events");
 
 			while (myRs.next()) {
-				Event tempEmployee = convertRowToEvent(myRs);
-				list.add(tempEmployee);
+				Event tempEvent = convertRowToEvent(myRs);
+				list.add(tempEvent);
 			}
-
 			return list;
 		} finally {
 			close(myStmt, myRs);
@@ -85,7 +86,8 @@ public class EventsDao {
 		PreparedStatement myStmt = null;
 		try {
 			myStmt = myConn
-					.prepareStatement("INSERT INTO events(id, name, country, location, startdate, enddate, isfree)"
+					.prepareStatement("INSERT INTO events"
+							+ "(id, name, country, location, startdate, enddate, isfree)"
 							+ "values (?, ?, ?, ?, ?, ?, ?)");
 			myStmt.setInt(1, event.getId());
 			myStmt.setString(2, event.getName());
@@ -104,7 +106,8 @@ public class EventsDao {
 	public boolean updateEvent(Event event) {
 		PreparedStatement myStmt = null;
 		try {
-			myStmt = myConn.prepareStatement("UPDATE events" + " SET name = ?, country = ?, location = ?,"
+			myStmt = myConn.prepareStatement("UPDATE events"
+					+ " SET name = ?, country = ?, location = ?,"
 					+ " startDate = ?, endDate = ?, isFree =? where id = ?");
 			myStmt.setString(1, event.getName());
 			myStmt.setString(2, event.getCountry());
