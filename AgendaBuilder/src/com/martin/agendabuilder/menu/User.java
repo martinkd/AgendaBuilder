@@ -1,43 +1,43 @@
 package com.martin.agendabuilder.menu;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.martin.agendabuilder.core.EventsManager;
-import com.martin.agendabuilder.core.UserEventsManager;
+import com.martin.agendabuilder.dao.EventsDao;
 import com.martin.agendabuilder.entity.Event;
 import com.martin.agendabuilder.util.InputUtils;
 
 public class User {
 
 	private static final int RETURN = 0;
-	// public static Map<Integer, Event> myAgenda = new HashMap<Integer,
-	// Event>();
 
 	public static void showAllEvents(Scanner input) {
-
-		List<Event> allEvents = EventsManager.getAllEvents();
-		if (allEvents.isEmpty()) {
+		EventsDao dao = new EventsDao();
+		if (dao.isEmpty()) {
 			System.out.println("There are no events to show");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
 		} else {
-			for (Event event : allEvents) {
-				System.out.printf("Id: %s, Name: %s%n", event.getId(), event.getName());
-				System.out.println();
-			}
-			while (true) {
-				System.out.println("Press \"0\" (zero) to return");
-				if (InputUtils.getValidInteger(input) == RETURN) {
-					AgendaBuilderMenu.userMenu();
-					break;
-				}
+			List<Event> events = dao.getAllEvents();
+			Operator.getSortedEvents(events);
+			returnUserMenu(input);
+		}
+	}
+
+	private static void returnUserMenu(Scanner input) {
+		while (true) {
+			System.out.println("Press \"0\" (zero) to return");
+			if (InputUtils.getValidInteger(input) == RETURN) {
+				AgendaBuilderMenu.userMenu();
+				break;
 			}
 		}
 	}
 
 	public static void registerEvent(Scanner input) {
-		if (EventsManager.getAllEvents().isEmpty()) {
+		EventsDao dao = new EventsDao();
+		if (dao.isEmpty()) {
 			System.out.println("There are no events to register");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
@@ -45,8 +45,8 @@ public class User {
 			System.out.print("Enter Id of event you want to register: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			if (EventsManager.getEvent(id) != null) {
-				if (UserEventsManager.register(id)) {
+			if (dao.contains(id)) {
+				if (dao.register(id)) {
 					System.out.printf("You sucessfully registered for event with Id: \"%s\"%n", id);
 					System.out.println();
 					AgendaBuilderMenu.userMenu();
@@ -65,7 +65,8 @@ public class User {
 	}
 
 	public static void unRegisterEvent(Scanner input) {
-		if (EventsManager.getAllEvents().isEmpty()) {
+		EventsDao dao = new EventsDao();
+		if (dao.isEmpty()) {
 			System.out.println("There are no events to unregister");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
@@ -73,7 +74,7 @@ public class User {
 			System.out.println("Enter Id of event you want to unregister: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			if (UserEventsManager.unregister(id)) {
+			if (dao.unRegister(id)) {
 				System.out.printf("You sucessfully unregistered from event with Id: \"%s\"%n", id);
 				System.out.println();
 				AgendaBuilderMenu.userMenu();
@@ -87,23 +88,19 @@ public class User {
 	}
 
 	public static void showMyAgenda(Scanner input) {
-		List<Event> agendaEvents = UserEventsManager.getAgendaEvents();
-		if (agendaEvents.isEmpty()) {
+		EventsDao dao = new EventsDao();
+		List<Integer> agendaIds = dao.getAllAgendaIDs();
+		if (agendaIds.isEmpty()) {
 			System.out.println("There are no events in your Agenda");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
 		} else {
-			for (Event event : agendaEvents) {
-				System.out.printf("Id: %s, Name: %s%n", event.getId(), event.getName());
-				System.out.println();
+			List<Event> events = new ArrayList<Event>();
+			for (int id : agendaIds) {
+				events.add(dao.getEvent(id));
 			}
-			while (true) {
-				System.out.println("Press \"0\" (zero) to return");
-				if (InputUtils.getValidInteger(input) == RETURN) {
-					AgendaBuilderMenu.userMenu();
-					break;
-				}
-			}
+			Operator.getSortedEvents(events);
+			returnUserMenu(input);
 		}
 	}
 }

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import com.martin.agendabuilder.core.EventsManager;
+import com.martin.agendabuilder.dao.EventsDao;
 import com.martin.agendabuilder.entity.Event;
 import com.martin.agendabuilder.util.InputUtils;
 
@@ -22,10 +22,11 @@ public class Operator {
 
 	public static void createNewEvent(Scanner input) {
 		Event newEvent = new Event();
+		EventsDao dao = new EventsDao();
 		System.out.print("Id: ");
 
 		int id = InputUtils.getValidInteger(input);
-		if (EventsManager.getEvent(id) == null) {
+		if (!dao.contains(id)) {
 			newEvent.setId(id);
 		} else {
 			System.err.printf("Event with Id: %s already exists, please enter another Id%n", id);
@@ -46,7 +47,7 @@ public class Operator {
 		System.out.print("Enter \"true\" if the event is free: ");
 		newEvent.setIsFreeEvent(InputUtils.getValidBoolean(input));
 
-		EventsManager.addEvent(newEvent);
+		dao.addEvent(newEvent);
 
 		System.out.printf("%nYou sucsesfully created event with id: \"%s\" %n", id);
 		System.out.println();
@@ -54,35 +55,46 @@ public class Operator {
 	}
 
 	public static void showAllEvents(Scanner input) {
-		List<Event> events = EventsManager.getAllEvents();
-		if (events.isEmpty()) {
+		EventsDao dao = new EventsDao();
+		if (dao.isEmpty()) {
 			System.out.println("There are no events to show");
 			System.out.println();
 			AgendaBuilderMenu.readEventMenu();
 		} else {
-			Collections.sort(events, new Comparator<Event>() {
+			List<Event> events = dao.getAllEvents();
+			getSortedEvents(events);
+		}
 
-				@Override
-				public int compare(Event eventOne, Event eventTwo) {
-					return eventOne.getName().compareTo(eventTwo.getName());
-				}
-			});
-			for (Event event : events) {
-				System.out.printf("Id: %s, Name: %s%n", event.getId(), event.getName());
-				System.out.println();
+		returnReadEventMenu(input);
+	}
+
+	public static void getSortedEvents(List<Event> events) {
+		Collections.sort(events, new Comparator<Event>() {
+
+			@Override
+			public int compare(Event eventOne, Event eventTwo) {
+				return eventOne.getName().compareTo(eventTwo.getName());
 			}
-			while (true) {
-				System.out.println("Press \"0\" (zero) to return");
-				if (InputUtils.getValidInteger(input) == RETURN) {
-					AgendaBuilderMenu.readEventMenu();
-					break;
-				}
+		});
+		for (Event event : events) {
+			System.out.printf("Id: %s, Name: %s%n", event.getId(), event.getName());
+			System.out.println();
+		}
+	}
+
+	private static void returnReadEventMenu(Scanner input) {
+		while (true) {
+			System.out.println("Press \"0\" (zero) to return");
+			if (InputUtils.getValidInteger(input) == RETURN) {
+				AgendaBuilderMenu.readEventMenu();
+				break;
 			}
 		}
 	}
 
 	public static void readEvent(Scanner input) {
-		if (EventsManager.getAllEvents().isEmpty()) {
+		EventsDao dao = new EventsDao();
+		if (dao.isEmpty()) {
 			System.out.println("There are no events to show");
 			System.out.println();
 			AgendaBuilderMenu.readEventMenu();
@@ -90,16 +102,10 @@ public class Operator {
 			System.out.print("Enter Id of the event you want to read: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			Event event = EventsManager.getEvent(id);
+			Event event = dao.getEvent(id);
 			if (event != null) {
 				System.out.println(event);
-				while (true) {
-					System.out.println("Press \"0\" (zero) to return");
-					if (InputUtils.getValidInteger(input) == RETURN) {
-						AgendaBuilderMenu.readEventMenu();
-						break;
-					}
-				}
+				returnReadEventMenu(input);
 			} else {
 				System.out.printf("Event with Id \"%s\" does not exists%n", id);
 				System.out.println();
@@ -109,7 +115,8 @@ public class Operator {
 	}
 
 	public static void editEvent(Scanner input) {
-		if (EventsManager.getAllEvents().isEmpty()) {
+		EventsDao dao = new EventsDao();
+		if (dao.isEmpty()) {
 			System.out.println("There are no events to edit");
 			System.out.println();
 			AgendaBuilderMenu.editEventMenu();
@@ -117,9 +124,9 @@ public class Operator {
 			System.out.print("Enter Id of the event you want to edit: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			Event event = EventsManager.getEvent(id);
+			Event event = dao.getEvent(id);
 			if (event != null) {
-				chooseDataToEdit(input, event);
+				chooseDataToEdit(input, event, dao);
 			} else {
 				System.out.printf("Event with Id \"%s\" does not exists%n", id);
 				System.out.println();
@@ -128,8 +135,8 @@ public class Operator {
 		}
 	}
 
-	private static void chooseDataToEdit(Scanner input, Event currentEvent) {
-		EventsManager.updateEvent(currentEvent);
+	private static void chooseDataToEdit(Scanner input, Event currentEvent, EventsDao dao) {
+		dao.updateEvent(currentEvent);
 		System.out.println(currentEvent);
 		System.out.print("Choose data to edit (1-6) or 0 to return: ");
 		switch (InputUtils.getValidInteger(input)) {
@@ -141,35 +148,35 @@ public class Operator {
 			String newName = input.nextLine();
 			currentEvent.setName(newName);
 			System.out.println("You sucessfully changed name of the event to: " + newName);
-			chooseDataToEdit(input, currentEvent);
+			chooseDataToEdit(input, currentEvent, dao);
 			break;
 		case COUNTRY:
 			System.out.println("Enter new country: ");
 			String newCountry = input.nextLine();
 			currentEvent.setCountry(newCountry);
 			System.out.println("You sucessfully changed country of the event to: " + newCountry);
-			chooseDataToEdit(input, currentEvent);
+			chooseDataToEdit(input, currentEvent, dao);
 			break;
 		case LOCATION:
 			System.out.println("Enter new location: ");
 			String newLocation = input.nextLine();
 			currentEvent.setLocation(newLocation);
 			System.out.println("You sucessfully changed location of the event to: " + newLocation);
-			chooseDataToEdit(input, currentEvent);
+			chooseDataToEdit(input, currentEvent, dao);
 			break;
 		case START_DATE:
 			System.out.println("Enter new start date: ");
 			Date newStartDate = InputUtils.validDate(input);
 			currentEvent.setStartDate(newStartDate);
 			System.out.println("You sucessfully changed start date of the event to: " + newStartDate);
-			chooseDataToEdit(input, currentEvent);
+			chooseDataToEdit(input, currentEvent, dao);
 			break;
 		case END_DATE:
 			System.out.println("Enter new end date: ");
 			Date newEndDate = InputUtils.validDate(input);
 			currentEvent.setEndDate(newEndDate);
 			System.out.println("You sucessfully changed start date of the event to: " + newEndDate);
-			chooseDataToEdit(input, currentEvent);
+			chooseDataToEdit(input, currentEvent, dao);
 			break;
 		case IS_FREE:
 			System.out.println("If you want to make the event free, enter \"true\": ");
@@ -177,22 +184,23 @@ public class Operator {
 			currentEvent.setIsFreeEvent(isFree);
 			if (isFree) {
 				System.out.println("You set the event free");
-				chooseDataToEdit(input, currentEvent);
+				chooseDataToEdit(input, currentEvent, dao);
 				break;
 			} else {
 				System.out.println("You set the event not free");
-				chooseDataToEdit(input, currentEvent);
+				chooseDataToEdit(input, currentEvent, dao);
 				break;
 			}
 		default:
 			System.err.println("Enter valid number");
-			chooseDataToEdit(input, currentEvent);
+			chooseDataToEdit(input, currentEvent, dao);
 			break;
 		}
 	}
 
 	public static void deleteEvent(Scanner input) {
-		if (EventsManager.getAllEvents().isEmpty()) {
+		EventsDao dao = new EventsDao();
+		if (dao.isEmpty()) {
 			System.out.println("There are no events to remove");
 			System.out.println();
 			AgendaBuilderMenu.deleteEventMenu();
@@ -200,8 +208,8 @@ public class Operator {
 			System.out.print("Enter Id of the event you want to remove: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			if (EventsManager.getEvent(id) != null) {
-				EventsManager.removeEvent(id);
+			if (dao.contains(id)) {
+				dao.deleteEvent(id);
 				System.out.printf("You sucessfully removed event with Id: %s%n", id);
 				System.out.println();
 				AgendaBuilderMenu.deleteEventMenu();

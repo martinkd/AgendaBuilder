@@ -20,12 +20,12 @@ public class Event {
 	}
 
 	private int id;
-	private String name;
-	private String country;
-	private String location;
-	private Date startDate;
-	private Date endDate;
-	private Boolean isFreeEvent;
+	private String name = "";
+	private String country = null;
+	private String location = null;
+	private Date startDate = null;
+	private Date endDate = null;
+	private Boolean isFreeEvent = false;
 
 	public int getId() {
 		return id;

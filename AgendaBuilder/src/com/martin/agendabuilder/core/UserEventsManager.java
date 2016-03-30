@@ -11,7 +11,7 @@ public class UserEventsManager {
 	public static boolean register(Integer id) {
 		try {
 			EventsDao dao = new EventsDao();
-			return dao.searchById(id) != null && dao.register(id);
+			return dao.getEvent(id) != null && dao.register(id);
 		} catch (Exception e) {
 			return false;
 		}
@@ -20,7 +20,7 @@ public class UserEventsManager {
 	public static boolean unregister(Integer id) {
 		try {
 			EventsDao dao = new EventsDao();
-			return dao.searchById(id) != null && dao.unRegister(id);
+			return dao.getEvent(id) != null && dao.unRegister(id);
 		} catch (Exception e) {
 			return false;
 		}
@@ -31,7 +31,7 @@ public class UserEventsManager {
 		EventsDao dao;
 		try {
 			dao = new EventsDao();
-			for (Integer id : dao.getAllAgendaEvents()) {
+			for (Integer id : dao.getAllAgendaIDs()) {
 				Event event = EventsManager.getEvent(id);
 				if (event != null) {
 					events.add(event);

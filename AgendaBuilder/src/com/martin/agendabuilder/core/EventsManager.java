@@ -20,7 +20,7 @@ public class EventsManager {
 	public static Event getEvent(Integer id) {
 		try {
 			EventsDao dao = new EventsDao();
-			return dao.searchById(id);
+			return dao.getEvent(id);
 		} catch (Exception e) {
 			return new Event();
 		}
@@ -29,27 +29,36 @@ public class EventsManager {
 	public static boolean addEvent(Event event) {
 		try {
 			EventsDao dao = new EventsDao();
-			return dao.insertIntoDb(event);
+			if (!getAllEvents().contains(event.getId())) {
+				return dao.addEvent(event);
+			}
 		} catch (Exception e) {
 			return false;
 		}
+		return false;
 	}
 
 	public static boolean updateEvent(Event event) {
 		try {
 			EventsDao dao = new EventsDao();
-			return dao.updateEvent(event);
+			if (getAllEvents().contains(event.getId())){				
+				return dao.updateEvent(event);
+			}
 		} catch (Exception e) {
 			return false;
 		}
+		return false;
 	}
 
 	public static boolean removeEvent(Integer id) {
 		try {
 			EventsDao dao = new EventsDao();
-			return dao.deleteEvent(id);
+			if (getAllEvents().contains(id)){
+				return dao.deleteEvent(id);				
+			}
 		} catch (Exception e) {
 			return false;
 		}
+		return false;
 	}
 }
