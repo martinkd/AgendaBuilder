@@ -207,8 +207,7 @@ public class Operator {
 			System.out.print("Enter Id of the event you want to remove: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			if (dao.contains(id)) {
-				dao.deleteEvent(id);
+			if (dao.deleteEvent(id)) {
 				System.out.printf("You sucessfully removed event with Id: %s%n", id);
 				System.out.println();
 				AgendaBuilderMenu.deleteEventMenu();

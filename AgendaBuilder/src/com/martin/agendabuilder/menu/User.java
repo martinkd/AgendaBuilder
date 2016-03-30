@@ -66,7 +66,7 @@ public class User {
 
 	public static void unRegisterEvent(Scanner input) {
 		EventsDao dao = new EventsDao();
-		if (dao.isEmpty()) {
+		if (dao.isEmpty() || dao.getAllAgendaIDs().isEmpty()) {
 			System.out.println("There are no events to unregister");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
