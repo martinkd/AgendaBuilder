@@ -28,30 +28,29 @@ public class Operator {
 		int id = InputUtils.getValidInteger(input);
 		if (!dao.contains(id)) {
 			newEvent.setId(id);
+			System.out.print("Enter name: ");
+			newEvent.setName(input.nextLine());
+			System.out.print("Enter country: ");
+			newEvent.setCountry(input.nextLine());
+			System.out.print("Enter location: ");
+			newEvent.setLocation(input.nextLine());
+			System.out.print("Enter start date: ");
+			newEvent.setStartDate(InputUtils.validDate(input));
+			System.out.print("Enter end date: ");
+			newEvent.setEndDate(InputUtils.validDate(input));
+			System.out.print("Enter \"true\" if the event is free: ");
+			newEvent.setIsFreeEvent(InputUtils.getValidBoolean(input));
+
+			dao.addEvent(newEvent);
+
+			System.out.printf("%nYou sucsesfully created event with id: \"%s\" %n", id);
+			System.out.println();
+			AgendaBuilderMenu.operatorMenu();
 		} else {
 			System.err.printf("Event with Id: %s already exists, please enter another Id%n", id);
 			System.out.println();
 			createNewEvent(input);
 		}
-
-		System.out.print("Enter name: ");
-		newEvent.setName(input.nextLine());
-		System.out.print("Enter country: ");
-		newEvent.setCountry(input.nextLine());
-		System.out.print("Enter location: ");
-		newEvent.setLocation(input.nextLine());
-		System.out.print("Enter start date: ");
-		newEvent.setStartDate(InputUtils.validDate(input));
-		System.out.print("Enter end date: ");
-		newEvent.setEndDate(InputUtils.validDate(input));
-		System.out.print("Enter \"true\" if the event is free: ");
-		newEvent.setIsFreeEvent(InputUtils.getValidBoolean(input));
-
-		dao.addEvent(newEvent);
-
-		System.out.printf("%nYou sucsesfully created event with id: \"%s\" %n", id);
-		System.out.println();
-		AgendaBuilderMenu.operatorMenu();
 	}
 
 	public static void showAllEvents(Scanner input) {
