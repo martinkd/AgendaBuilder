@@ -123,8 +123,8 @@ public class EventsDao {
 				myStmt.setString(3, event.getCountry());
 				myStmt.setString(4, event.getLocation());
 				myStmt.setDate(5,
-						event.getStartDate() == null ? null : new java.sql.Date(event.getStartDate().getTime()));
-				myStmt.setDate(6, event.getEndDate() == null ? null : new java.sql.Date(event.getEndDate().getTime()));
+						startDate(event));
+				myStmt.setDate(6, endDate(event));
 				myStmt.setBoolean(7, event.getIsFreeEvent());
 				myStmt.executeUpdate();
 				completeAdd = true;
@@ -145,9 +145,8 @@ public class EventsDao {
 				myStmt.setString(1, event.getName());
 				myStmt.setString(2, event.getCountry());
 				myStmt.setString(3, event.getLocation());
-				myStmt.setDate(4,
-						event.getStartDate() == null ? null : new java.sql.Date(event.getStartDate().getTime()));
-				myStmt.setDate(5, event.getEndDate() == null ? null : new java.sql.Date(event.getEndDate().getTime()));
+				myStmt.setDate(4, startDate(event));
+				myStmt.setDate(5, endDate(event));
 				myStmt.setBoolean(6, event.getIsFreeEvent());
 				myStmt.setInt(7, event.getId());
 				myStmt.executeUpdate();
@@ -157,6 +156,14 @@ public class EventsDao {
 			return false;
 		}
 		return completeUpdate;
+	}
+
+	private Date endDate(Event event) {
+		return event.getEndDate() == null ? null : new java.sql.Date(event.getEndDate().getTime());
+	}
+
+	private Date startDate(Event event) {
+		return event.getStartDate() == null ? null : new java.sql.Date(event.getStartDate().getTime());
 	}
 
 	public boolean deleteEvent(int id) {
@@ -262,16 +269,6 @@ public class EventsDao {
 
 	private static void close(Statement myStmt, ResultSet myRs) {
 		close(null, myStmt, myRs);
-	}
-
-	public static void main(String[] args) {
-		EventsDao dao;
-		try {
-			dao = new EventsDao();
-			System.out.println(dao.getEvent(1));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }
