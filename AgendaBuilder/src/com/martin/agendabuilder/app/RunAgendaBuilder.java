@@ -1,4 +1,4 @@
-package AgendaBuilderApp;
+package com.martin.agendabuilder.app;
 
 import java.sql.SQLException;
 
