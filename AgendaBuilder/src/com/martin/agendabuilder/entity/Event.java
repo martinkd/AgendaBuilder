@@ -3,13 +3,11 @@ package com.martin.agendabuilder.entity;
 import java.util.Date;
 
 public class Event {
-	public Event() {
-		super();
-	}
-
+	
+	public Event () {};
+	
 	public Event(int id, String name, String country, String location, Date startDate, Date endDate,
 			Boolean isFreeEvent) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.country = country;
