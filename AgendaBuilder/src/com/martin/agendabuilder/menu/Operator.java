@@ -1,5 +1,6 @@
 package com.martin.agendabuilder.menu;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -19,14 +20,14 @@ public class Operator {
 	private static final int END_DATE = 5;
 	private static final int IS_FREE = 6;
 	private static final int RETURN = 0;
-
-	public static void createNewEvent(Scanner input) {
+	private static EventsDao dao = new EventsDao();
+	
+	public static void createNewEvent(Scanner input) throws SQLException {
 		Event newEvent = new Event();
-		EventsDao dao = new EventsDao();
 		System.out.print("Id: ");
 
 		int id = InputUtils.getValidInteger(input);
-		if (!dao.contains(id)) {
+		if (!dao.containsIdInTable(id, "events")) {
 			newEvent.setId(id);
 			System.out.print("Enter name: ");
 			newEvent.setName(input.nextLine());
@@ -53,7 +54,7 @@ public class Operator {
 		}
 	}
 
-	public static void showAllEvents(Scanner input) {
+	public static void showAllEvents(Scanner input) throws SQLException {
 		EventsDao dao = new EventsDao();
 		if (dao.isEmpty()) {
 			System.out.println("There are no events to show");
@@ -81,7 +82,7 @@ public class Operator {
 		}
 	}
 
-	private static void returnReadEventMenu(Scanner input) {
+	private static void returnReadEventMenu(Scanner input) throws SQLException {
 		while (true) {
 			System.out.println("Press \"0\" (zero) to return");
 			if (InputUtils.getValidInteger(input) == RETURN) {
@@ -91,7 +92,7 @@ public class Operator {
 		}
 	}
 
-	public static void readEvent(Scanner input) {
+	public static void readEvent(Scanner input) throws SQLException {
 		EventsDao dao = new EventsDao();
 		if (dao.isEmpty()) {
 			System.out.println("There are no events to show");
@@ -113,7 +114,7 @@ public class Operator {
 		}
 	}
 
-	public static void editEvent(Scanner input) {
+	public static void editEvent(Scanner input) throws SQLException {
 		EventsDao dao = new EventsDao();
 		if (dao.isEmpty()) {
 			System.out.println("There are no events to edit");
@@ -134,7 +135,7 @@ public class Operator {
 		}
 	}
 
-	private static void chooseDataToEdit(Scanner input, Event currentEvent, EventsDao dao) {
+	private static void chooseDataToEdit(Scanner input, Event currentEvent, EventsDao dao) throws SQLException {
 		dao.updateEvent(currentEvent);
 		System.out.println(currentEvent);
 		System.out.print("Choose data to edit (1-6) or 0 to return: ");
@@ -197,7 +198,7 @@ public class Operator {
 		}
 	}
 
-	public static void deleteEvent(Scanner input) {
+	public static void deleteEvent(Scanner input) throws SQLException {
 		EventsDao dao = new EventsDao();
 		if (dao.isEmpty()) {
 			System.out.println("There are no events to remove");

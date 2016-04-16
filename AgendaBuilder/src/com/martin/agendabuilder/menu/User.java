@@ -1,9 +1,11 @@
 package com.martin.agendabuilder.menu;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.martin.agendabuilder.dao.AgendaEventsDao;
 import com.martin.agendabuilder.dao.EventsDao;
 import com.martin.agendabuilder.entity.Event;
 import com.martin.agendabuilder.util.InputUtils;
@@ -11,9 +13,10 @@ import com.martin.agendabuilder.util.InputUtils;
 public class User {
 
 	private static final int RETURN = 0;
-
-	public static void showAllEvents(Scanner input) {
-		EventsDao dao = new EventsDao();
+	private static EventsDao dao = new EventsDao();
+	private static AgendaEventsDao agendaDao = new AgendaEventsDao();
+	
+	public static void showAllEvents(Scanner input) throws SQLException {
 		if (dao.isEmpty()) {
 			System.out.println("There are no events to show");
 			System.out.println();
@@ -25,7 +28,7 @@ public class User {
 		}
 	}
 
-	private static void returnUserMenu(Scanner input) {
+	private static void returnUserMenu(Scanner input) throws SQLException {
 		while (true) {
 			System.out.println("Press \"0\" (zero) to return");
 			if (InputUtils.getValidInteger(input) == RETURN) {
@@ -35,8 +38,7 @@ public class User {
 		}
 	}
 
-	public static void registerEvent(Scanner input) {
-		EventsDao dao = new EventsDao();
+	public static void registerEvent(Scanner input) throws SQLException {
 		if (dao.isEmpty()) {
 			System.out.println("There are no events to register");
 			System.out.println();
@@ -45,8 +47,8 @@ public class User {
 			System.out.print("Enter Id of event you want to register: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			if (dao.contains(id)) {
-				if (dao.register(id)) {
+			if (dao.containsIdInTable(id, "events")) {
+				if (agendaDao.register(id)) {
 					System.out.printf("You sucessfully registered for event with Id: \"%s\"%n", id);
 					System.out.println();
 					AgendaBuilderMenu.userMenu();
@@ -64,9 +66,8 @@ public class User {
 		}
 	}
 
-	public static void unRegisterEvent(Scanner input) {
-		EventsDao dao = new EventsDao();
-		if (dao.isEmpty() || dao.getAllAgendaIDs().isEmpty()) {
+	public static void unRegisterEvent(Scanner input) throws SQLException {
+		if (dao.isEmpty() || agendaDao.getAllAgendaIDs().isEmpty()) {
 			System.out.println("There are no events to unregister");
 			System.out.println();
 			AgendaBuilderMenu.userMenu();
@@ -74,7 +75,7 @@ public class User {
 			System.out.println("Enter Id of event you want to unregister: ");
 			int id = InputUtils.getValidInteger(input);
 			System.out.println();
-			if (dao.unRegister(id)) {
+			if (agendaDao.unRegister(id)) {
 				System.out.printf("You sucessfully unregistered from event with Id: \"%s\"%n", id);
 				System.out.println();
 				AgendaBuilderMenu.userMenu();
@@ -87,9 +88,9 @@ public class User {
 		}
 	}
 
-	public static void showMyAgenda(Scanner input) {
+	public static void showMyAgenda(Scanner input) throws SQLException {
 		EventsDao dao = new EventsDao();
-		List<Integer> agendaIds = dao.getAllAgendaIDs();
+		List<Integer> agendaIds = agendaDao.getAllAgendaIDs();
 		if (agendaIds.isEmpty()) {
 			System.out.println("There are no events in your Agenda");
 			System.out.println();

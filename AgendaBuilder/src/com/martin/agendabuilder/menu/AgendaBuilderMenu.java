@@ -1,4 +1,5 @@
 package com.martin.agendabuilder.menu;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import com.martin.agendabuilder.util.InputUtils;
@@ -22,7 +23,7 @@ public class AgendaBuilderMenu {
 	private static final int MAIN_MENU_USE = 1;
 	private static Scanner input = new Scanner(System.in);
 
-	public static void mainMenu() {
+	public static void mainMenu() throws SQLException {
 		System.out.println("\tMAIN");
 		System.out.println("1. Use\n0. Exit\n");
 		System.out.print("Enter option: ");
@@ -42,7 +43,7 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	private static void useMenu() {
+	private static void useMenu() throws SQLException {
 		System.out.println("\tUSE");
 		System.out.println("1. User\n2. Operator\n0. Return\n");
 		System.out.print("Enter option: ");
@@ -65,7 +66,7 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	public static void userMenu() {
+	public static void userMenu() throws SQLException {
 		System.out.println("\tUSER");
 		System.out.println("1. List all\n2. Register for event\n3. Unregister from event\n4. My agenda\n0. Return\n");
 		System.out.print("Enter option: ");
@@ -94,7 +95,7 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	public static void operatorMenu() {
+	public static void operatorMenu() throws SQLException {
 		System.out.println("\tOPERATOR");
 		System.out.println("1. Read event\n2. Create new event\n3. Edit event\n4. Delete event\n0. Return\n");
 		System.out.print("Enter option: ");
@@ -123,7 +124,7 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	public static void readEventMenu() {
+	public static void readEventMenu() throws SQLException {
 		System.out.println("\tREAD");
 		System.out.println("1. List all\n2. Find by Id\n0. Return\n");
 		System.out.print("Enter option: ");
@@ -146,7 +147,7 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	public static void editEventMenu() {
+	public static void editEventMenu() throws SQLException {
 		System.out.println("\tEDIT");
 		System.out.println("1. Find by Id\n0. Return\n");
 		System.out.print("Enter option: ");
@@ -166,7 +167,7 @@ public class AgendaBuilderMenu {
 		}
 	}
 
-	public static void deleteEventMenu() {
+	public static void deleteEventMenu() throws SQLException {
 		System.out.println("\tDELETE");
 		System.out.println("1. Delete by Id\n0. Return\n");
 		System.out.print("Enter opton: ");
