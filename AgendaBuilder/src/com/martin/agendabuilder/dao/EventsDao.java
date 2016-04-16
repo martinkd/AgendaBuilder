@@ -1,8 +1,6 @@
 package com.martin.agendabuilder.dao;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,148 +12,71 @@ import com.martin.agendabuilder.entity.Event;
 
 public class EventsDao {
 
-	private Connection myConn;
+	public Statement myStmt;
+	public ResultSet myRs;
+	public PreparedStatement myPrepStmt;
+	public EventsDataAccess dataAccess = new EventsDataAccess();
 
-	public EventsDao() {
-		try {
-			connectDb();
-			createTablesIfNotExist();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public boolean containsIdInTable(int id, String table) throws SQLException {
+		boolean containsId = false;
+		String sql = "SELECT id FROM " + table + " WHERE id = ?;";
+		myPrepStmt = dataAccess.getMyConn().prepareStatement(sql);
+		myPrepStmt.setInt(1, id);
+		myRs = myPrepStmt.executeQuery();
+		containsId = myRs.next();
+		return containsId;
 	}
 
-	private void createTablesIfNotExist() throws SQLException {
-		Statement myStmt = myConn.createStatement();
-		String createTableEvents = "CREATE TABLE IF NOT EXISTS events (" + "id int PRIMARY KEY," + "name varchar(45),"
-				+ "country varchar(45)," + "location varchar(45)," + "startdate date," + "enddate date,"
-				+ "isfree bit default 0," + "UNIQUE INDEX id_unique (id));";
-		myStmt.execute(createTableEvents);
-
-		String createTableAgendaEvents = "CREATE TABLE IF NOT EXISTS agendaevents(" + "events_id INT NULL, "
-				+ "UNIQUE INDEX unique_id (events_id), " + "FOREIGN KEY (events_id) REFERENCES events (id) "
-				+ "ON DELETE CASCADE ON UPDATE CASCADE);";
-		myStmt.execute(createTableAgendaEvents);
-	}
-
-	private void connectDb() throws SQLException {
-		String dbUrl = "jdbc:mysql://localhost:3306/eventsDB?useSSL=false";
-		String user = "student";
-		String pass = "student";
-		myConn = DriverManager.getConnection(dbUrl, user, pass);
-	}
-
-	public boolean isEmpty() {
-		return getAllEvents().isEmpty();
-	}
-
-	public List<Event> getAllEvents() {
-		List<Event> list = new ArrayList<>();
-
-		Statement myStmt = null;
-		ResultSet myRs = null;
-
-		try {
-			myStmt = myConn.createStatement();
-			myRs = myStmt.executeQuery("SELECT * FROM events");
-
-			while (myRs.next()) {
-				Event tempEvent = convertRowToEvent(myRs);
-				list.add(tempEvent);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		} finally {
-			close(myStmt, myRs);
+	public List<Event> getAllEvents() throws SQLException {
+		List<Event> list = new ArrayList<Event>();
+		String sql = "SELECT * FROM events;";
+		myStmt = dataAccess.getMyConn().createStatement();
+		myRs = myStmt.executeQuery(sql);
+		while (myRs.next()) {
+			Event tempEvent = convertRowToEvent(myRs);
+			list.add(tempEvent);
 		}
 		return list;
 	}
 
-	public boolean contains(int id) {
-		PreparedStatement myStmt = null;
-		ResultSet myRs = null;
-		boolean contains = false;
-		try {
-			myStmt = myConn.prepareStatement("SELECT id FROM events WHERE id = ?");
-			myStmt.setInt(1, id);
-			myRs = myStmt.executeQuery();
-			contains = myRs.next();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return contains;
+	public boolean isEmpty() throws SQLException {
+		return getAllEvents().isEmpty();
 	}
 
-	public Event getEvent(int id) {
-		PreparedStatement myStmt = null;
-		ResultSet myRs = null;
-		Event tempEvent = null;
-		try {
-			if (contains(id)) {
-				myStmt = myConn.prepareStatement("SELECT * FROM events WHERE id = ?");
-				myStmt.setInt(1, id);
-
-				myRs = myStmt.executeQuery();
-
-				while (myRs.next()) {
-					tempEvent = convertRowToEvent(myRs);
-				}
+	public Event getEvent(int id) throws SQLException {
+		Event foundEvent = null;
+		String sql = "SELECT * FROM events WHERE id = ?;";
+		if (containsIdInTable(id, "events")) {
+			myPrepStmt = dataAccess.getMyConn().prepareStatement(sql);
+			myPrepStmt.setInt(1, id);
+			myRs = myPrepStmt.executeQuery();
+			if (myRs.next()) {
+				foundEvent = convertRowToEvent(myRs);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		} finally {
-			close(myStmt, myRs);
 		}
-		return tempEvent;
+		return foundEvent;
 	}
 
-	public boolean addEvent(Event event) {
-		PreparedStatement myStmt = null;
-		boolean completeAdd = false;
-		try {
-			if (!contains(event.getId())) {
-				myStmt = myConn.prepareStatement("INSERT INTO events"
-						+ "(id, name, country, location, startdate, enddate, isfree)" + "values (?, ?, ?, ?, ?, ?, ?)");
-				myStmt.setInt(1, event.getId());
-				myStmt.setString(2, event.getName());
-				myStmt.setString(3, event.getCountry());
-				myStmt.setString(4, event.getLocation());
-				myStmt.setDate(5,
-						startDate(event));
-				myStmt.setDate(6, endDate(event));
-				myStmt.setBoolean(7, event.getIsFreeEvent());
-				myStmt.executeUpdate();
-				completeAdd = true;
-			}
-		} catch (SQLException e) {
-			return false;
+	public boolean addEvent(Event event) throws SQLException {
+		boolean canAdd = !containsIdInTable(event.getId(), "events");
+		if (canAdd) {
+			String sql = "INSERT INTO events" + "(id, name, country, location, startdate, enddate, isfree)"
+					+ "values (?, ?, ?, ?, ?, ?, ?);";
+			convertEventToRow(event, sql);
 		}
-		return completeAdd;
+		return canAdd;
 	}
 
-	public boolean updateEvent(Event event) {
-		PreparedStatement myStmt = null;
-		boolean completeUpdate = false;
-		try {
-			if (contains(event.getId())) {
-				myStmt = myConn.prepareStatement("UPDATE events" + " SET name = ?, country = ?, location = ?,"
-						+ " startDate = ?, endDate = ?, isFree =? where id = ?");
-				myStmt.setString(1, event.getName());
-				myStmt.setString(2, event.getCountry());
-				myStmt.setString(3, event.getLocation());
-				myStmt.setDate(4, startDate(event));
-				myStmt.setDate(5, endDate(event));
-				myStmt.setBoolean(6, event.getIsFreeEvent());
-				myStmt.setInt(7, event.getId());
-				myStmt.executeUpdate();
-				completeUpdate = true;
-			}
-		} catch (SQLException e) {
-			return false;
-		}
-		return completeUpdate;
+	private void convertEventToRow(Event event, String sql) throws SQLException {
+		myPrepStmt = dataAccess.getMyConn().prepareStatement(sql);
+		myPrepStmt.setInt(1, event.getId());
+		myPrepStmt.setString(2, event.getName());
+		myPrepStmt.setString(3, event.getCountry());
+		myPrepStmt.setString(4, event.getLocation());
+		myPrepStmt.setDate(5, startDate(event));
+		myPrepStmt.setDate(6, endDate(event));
+		myPrepStmt.setBoolean(7, event.getIsFreeEvent());
+		myPrepStmt.executeUpdate();
 	}
 
 	private Date endDate(Event event) {
@@ -166,74 +87,27 @@ public class EventsDao {
 		return event.getStartDate() == null ? null : new java.sql.Date(event.getStartDate().getTime());
 	}
 
-	public boolean deleteEvent(int id) {
-		PreparedStatement myStmt = null;
+	public boolean updateEvent(Event event) throws SQLException {
+		boolean completeUpdate = false;
+		if (containsIdInTable(event.getId(), "events")) {
+			String sql = "UPDATE events" + " SET name = ?, country = ?, location = ?,"
+					+ " startDate = ?, endDate = ?, isFree =? where id = ?";
+			convertEventToRow(event, sql);
+			completeUpdate = true;
+		}
+		return completeUpdate;
+	}
+
+	public boolean deleteEvent(int id) throws SQLException {
 		boolean completeDelete = false;
-		try {
-			if (contains(id)) {
-				myStmt = myConn.prepareStatement("DELETE  FROM events WHERE id = ?");
-				myStmt.setInt(1, id);
-				myStmt.executeUpdate();
-				completeDelete = true;
-			}
-		} catch (SQLException e) {
-			return false;
+		if (containsIdInTable(id, "events")) {
+			String sql = "DELETE  FROM events WHERE id = ?;";
+			myPrepStmt = dataAccess.getMyConn().prepareStatement(sql);
+			myPrepStmt.setInt(1, id);
+			myPrepStmt.executeUpdate();
+			completeDelete = true;
 		}
 		return completeDelete;
-	}
-
-	public boolean register(int id) {
-		PreparedStatement myStmt = null;
-		boolean completeRegister = false;
-		try {
-			if (contains(id) && !getAllAgendaIDs().contains(id)) {
-				myStmt = myConn
-						.prepareStatement("INSERT INTO agendaevents (events_id) SELECT id from events WHERE id = ?");
-				myStmt.setInt(1, id);
-				myStmt.executeUpdate();
-				completeRegister = true;
-			}
-		} catch (SQLException e) {
-			return false;
-		}
-		return completeRegister;
-	}
-
-	public boolean unRegister(int id) {
-		PreparedStatement myStmt = null;
-		try {
-			if (getAllAgendaIDs().contains(id)) {
-				myStmt = myConn.prepareStatement("DELETE FROM agendaevents where events_id = ?");
-				myStmt.setInt(1, id);
-				myStmt.executeUpdate();
-				return true;
-			}
-		} catch (SQLException e) {
-			return false;
-		}
-		return false;
-	}
-
-	public List<Integer> getAllAgendaIDs() {
-		List<Integer> list = new ArrayList<>();
-
-		Statement myStmt = null;
-		ResultSet myRs = null;
-
-		try {
-			myStmt = myConn.createStatement();
-			myRs = myStmt.executeQuery("SELECT events_id FROM agendaevents");
-
-			while (myRs.next()) {
-				int tempId = myRs.getInt("events_id");
-				list.add(tempId);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			close(myStmt, myRs);
-		}
-		return list;
 	}
 
 	private Event convertRowToEvent(ResultSet myRs) throws SQLException {
@@ -244,31 +118,8 @@ public class EventsDao {
 		Date startDate = myRs.getDate("startDate");
 		Date endDate = myRs.getDate("endDate");
 		boolean isFreeEvent = myRs.getBoolean("isFree");
-
-		Event theEvent = new Event(id, name, country, location, startDate, endDate, isFreeEvent);
-		return theEvent;
-	}
-
-	private static void close(Connection myConn, Statement myStmt, ResultSet myRs) {
-		try {
-			if (myRs != null) {
-				myRs.close();
-			}
-
-			if (myStmt != null) {
-
-			}
-
-			if (myConn != null) {
-				myConn.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void close(Statement myStmt, ResultSet myRs) {
-		close(null, myStmt, myRs);
+		Event event = new Event(id, name, country, location, startDate, endDate, isFreeEvent);
+		return event;
 	}
 
 }
