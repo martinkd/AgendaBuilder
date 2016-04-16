@@ -1,4 +1,4 @@
-package com.martin.agendabuilder.core;
+package com.martin.agendabuilder.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.martin.agendabuilder.dao.EventsDao;
 import com.martin.agendabuilder.entity.Event;
 
-public class EventsManagerTest {
+public class EventsDaoTest {
 	EventsDao eDao = new EventsDao();
 	
 	@Before

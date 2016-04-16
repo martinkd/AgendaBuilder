@@ -1,11 +1,11 @@
-package com.martin.agendabuilder.core;
+package com.martin.agendabuilder.dao;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ EventsManagerTest.class, UserEventsManagerTest.class })
+@SuiteClasses({ EventsDaoTest.class, AgendaEventsDaoTest.class })
 public class AllTests {
 
 }
