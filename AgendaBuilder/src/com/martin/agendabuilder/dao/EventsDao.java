@@ -88,26 +88,24 @@ public class EventsDao {
 	}
 
 	public boolean updateEvent(Event event) throws SQLException {
-		boolean completeUpdate = false;
-		if (containsIdInTable(event.getId(), "events")) {
+		boolean canUpdate = containsIdInTable(event.getId(), "events");
+		if (canUpdate) {
 			String sql = "UPDATE events" + " SET name = ?, country = ?, location = ?,"
 					+ " startDate = ?, endDate = ?, isFree =? where id = ?";
 			convertEventToRow(event, sql);
-			completeUpdate = true;
 		}
-		return completeUpdate;
+		return canUpdate;
 	}
 
 	public boolean deleteEvent(int id) throws SQLException {
-		boolean completeDelete = false;
-		if (containsIdInTable(id, "events")) {
+		boolean canDelete = containsIdInTable(id, "events");
+		if (canDelete) {
 			String sql = "DELETE  FROM events WHERE id = ?;";
 			myPrepStmt = dataAccess.getMyConn().prepareStatement(sql);
 			myPrepStmt.setInt(1, id);
 			myPrepStmt.executeUpdate();
-			completeDelete = true;
 		}
-		return completeDelete;
+		return canDelete;
 	}
 
 	private Event convertRowToEvent(ResultSet myRs) throws SQLException {
